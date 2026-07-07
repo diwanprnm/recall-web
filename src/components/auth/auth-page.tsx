@@ -19,16 +19,12 @@ export function AuthPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    setError(null)
     const success = mode === "login"
       ? await signIn(email, password)
       : await signUp(email, password)
-
-    if (!success) {
-      return
-    }
-    if (mode === "signup") {
-      setSubmitted(true)
-    }
+    if (!success) return
+    if (mode === "signup") setSubmitted(true)
   }
 
   if (submitted) {
@@ -42,7 +38,7 @@ export function AuthPage() {
           </div>
           <h2 className="text-2xl font-bold text-slate-900 mb-2">Check your email</h2>
           <p className="text-slate-500 mb-6">
-            We sent a confirmation link to <strong>{email}</strong>.<br />
+            We sent a confirmation link to <strong className="text-slate-700">{email}</strong>.<br />
             Click the link to activate your account.
           </p>
           <button
@@ -57,25 +53,25 @@ export function AuthPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50">
-      {/* Background decoration */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-blue-100 to-purple-100 rounded-full -translate-y-1/2 translate-x-1/2 opacity-60" />
+    <div className="min-h-screen flex items-center justify-center bg-slate-50 relative overflow-hidden">
+      {/* ── Decorative gradient orbs (from mockup) ── */}
+      <div className="absolute top-0 right-0 w-[28rem] h-[28rem] bg-gradient-to-bl from-blue-100 to-purple-100 rounded-full -translate-y-1/2 translate-x-1/2 opacity-60" />
       <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-purple-100 to-pink-100 rounded-full translate-y-1/2 -translate-x-1/2 opacity-60" />
 
       <div className="relative w-full max-w-md mx-4">
-        {/* Logo */}
+        {/* ── Logo block (from mockup) ── */}
         <div className="text-center mb-8">
           <div className="w-14 h-14 rounded-2xl gradient-hero flex items-center justify-center mx-auto mb-4 shadow-lg shadow-purple-500/20">
             <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
             </svg>
           </div>
-          <h1 className="text-3xl font-bold text-slate-900">Recall</h1>
-          <p className="text-slate-500 mt-1">Your Second Brain for Social Media</p>
+          <h1 className="text-3xl font-bold gradient-text">Recall</h1>
+          <p className="text-slate-500 mt-1 text-sm">Your Second Brain for Social Media</p>
         </div>
 
-        {/* Card */}
-        <div className="bg-white rounded-2xl shadow-xl border p-8">
+        {/* ── Card (matches mockup card styling) ── */}
+        <div className="bg-white rounded-2xl shadow-xl border p-8 animate-fade-in">
           <h2 className="text-xl font-semibold text-slate-900 mb-1">
             {mode === "login" ? "Welcome back" : "Create your account"}
           </h2>
@@ -100,7 +96,7 @@ export function AuthPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
                 required
-                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition text-sm"
+                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition text-sm"
               />
             </div>
 
@@ -114,7 +110,7 @@ export function AuthPage() {
                   placeholder="••••••••"
                   required
                   minLength={6}
-                  className="w-full px-4 py-2.5 pr-10 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition text-sm"
+                  className="w-full px-4 py-2.5 pr-10 rounded-xl border border-slate-200 bg-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition text-sm"
                 />
                 <button
                   type="button"
@@ -129,7 +125,7 @@ export function AuthPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium text-sm transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium text-sm transition flex items-center justify-center gap-2 shadow-lg shadow-blue-500/30 disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-xl"
             >
               {loading ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
