@@ -1,36 +1,163 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Recall Web — Frontend
 
-## Getting Started
+Next.js 16 (App Router) frontend for **Recall** — the AI-Powered Social Media Knowledge Manager.
 
-First, run the development server:
+> *Your Second Brain for Social Media*
+
+Connects to the FastAPI backend at `/root/recall-api` for the AI pipeline.
+
+---
+
+## 🏗️ Architecture
+
+```
+┌──────────────────────────────────────────┐
+│ Browser (Recall Web — Next.js App)        │
+│  ├─ Auth (Supabase Auth)                  │
+│  ├─ Dashboard (item library)              │
+│  ├─ Search (semantic, via FastAPI)        │
+│  └─ Item CRUD (via FastAPI)               │
+└──────────────┬───────────────────────────┘
+               │ HTTPS / Supabase JWT
+               ▼
+┌──────────────────────────────────────────┐
+│ FastAPI Backend (Recall API / Python)     │
+│  • Supabase JWT verify                    │
+│  • AI pipeline (instructor + 9router)     │
+│  • Embeddings + semantic search           │
+└──────────────────────────────────────────┘
+```
+
+---
+
+## 🚀 Setup
+
+### Prerequisites
+- Node.js 20+
+- A running [Recall API](../recall-api) backend
+- A Supabase project (free tier)
+
+### 1 — Install dependencies
+
+```bash
+cd /root/recall-web
+npm install
+```
+
+### 2 — Configure environment
+
+```bash
+cp .env.example .env.local
+```
+
+Edit `.env.local`:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhb...
+
+# FastAPI backend
+NEXT_PUBLIC_API_URL=http://localhost:8000
+```
+
+### 3 — Run dev server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Visit http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📁 Structure
 
-## Learn More
+```
+recall-web/
+├── src/
+│   ├── app/                       # Next.js App Router
+│   │   ├── (app)/                 # Authenticated routes
+│   │   │   └── dashboard/
+│   │   │       ├── page.tsx       # Library (grid + list)
+│   │   │       └── search/        # Semantic search
+│   │   ├── layout.tsx             # Root layout (fonts + Toaster)
+│   │   ├── page.tsx               # Landing → redirect to /dashboard or AuthPage
+│   │   └── globals.css
+│   ├── components/
+│   │   ├── auth/                  # AuthPage
+│   │   ├── items/                 # ItemCard (grid + list)
+│   │   ├── layout/                # Sidebar, Header
+│   │   └── ui/                    # Toast, Button, EmptyState
+│   ├── hooks/
+│   │   ├── use-auth.ts            # Supabase auth + JWT
+│   │   ├── use-items.ts           # CRUD items
+│   │   ├── use-search.ts          # Semantic search
+│   │   └── use-toast.ts
+│   ├── lib/
+│   │   ├── api/                   # FastAPI client
+│   │   ├── supabase/              # Server + browser clients
+│   │   └── utils.ts
+│   └── types/
+│       └── index.ts               # All TypeScript types (sync w/ Pydantic)
+├── .env.local
+└── package.json
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🎯 Features (Phase 2 MVP)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- ✅ Email/password signup & login
+- ✅ Dashboard with grid/list view toggle
+- ✅ Item cards with AI badges, tags, quality score
+- ✅ Platform filter pills (Twitter, YouTube, Reddit, etc.)
+- ✅ Add item modal (URL + platform → full AI pipeline)
+- ✅ Semantic search page with example queries
+- ✅ Toast notifications
+- ✅ Loading & empty states
+- ✅ Responsive layout (sidebar + grid)
 
-## Deploy on Vercel
+## 📅 Roadmap (Phase 3+)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Browser Extension (Plasmo)
+- Daily Digest (email)
+- Knowledge Graph visualizer
+- Light/dark mode toggle
+- Tag management page
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 🛠️ Stack
+
+- **Next.js 16** — App Router, React Server Components
+- **TypeScript** — full type-safety
+- **Tailwind CSS v4** — utility-first styling
+- **Supabase Auth** — JWT auth + session management
+- **Lucide React** — icons
+- **date-fns** — relative dates
+- **instructor** (via backend) — structured AI output
+
+---
+
+## 🧪 Build & Verify
+
+```bash
+npm run build      # production build
+npm run lint       # eslint
+npm run type-check # tsc --noEmit
+```
+
+## 🌐 Deploy to Vercel
+
+```bash
+# Install Vercel CLI
+npm i -g vercel
+
+# Deploy
+vercel --prod
+
+# Set environment variables:
+#   NEXT_PUBLIC_SUPABASE_URL
+#   NEXT_PUBLIC_SUPABASE_ANON_KEY
+#   NEXT_PUBLIC_API_URL (your FastAPI backend URL)
+```
