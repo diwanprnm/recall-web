@@ -3,20 +3,15 @@
 import { useState } from "react"
 import { useAuth } from "@/hooks/use-auth"
 import { useRouter } from "next/navigation"
-import { Bell, Plus, Grid2x2, List, X, Search as SearchIcon } from "lucide-react"
-import { type Platform, PLATFORM_META } from "@/types"
-
-const PLATFORMS: Platform[] = ["twitter", "youtube", "reddit", "instagram", "linkedin", "tiktok", "facebook", "web"]
+import { Bell, Plus, Grid2x2, List, Search as SearchIcon } from "lucide-react"
 
 interface HeaderProps {
-  activePlatform?: string
-  onPlatformChange?: (p: string | null) => void
   viewMode: "grid" | "list"
   onViewModeChange: (v: "grid" | "list") => void
   onAddClick?: () => void
 }
 
-export function Header({ activePlatform, onPlatformChange, viewMode, onViewModeChange, onAddClick }: HeaderProps) {
+export function Header({ viewMode, onViewModeChange, onAddClick }: HeaderProps) {
   const { user } = useAuth()
   const router = useRouter()
   const [query, setQuery] = useState("")
@@ -43,36 +38,6 @@ export function Header({ activePlatform, onPlatformChange, viewMode, onViewModeC
           />
         </div>
       </form>
-
-      {/* Platform pills — scroll on mobile, wrap on desktop */}
-      <div className="hidden md:flex items-center gap-1.5 overflow-x-auto max-w-xl scrollbar-hide">
-        <button
-          onClick={() => onPlatformChange?.(null)}
-          className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all whitespace-nowrap ${
-            !activePlatform
-              ? "bg-blue-600 text-white shadow-sm"
-              : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-          }`}
-        >
-          All
-        </button>
-        {PLATFORMS.map((p) => {
-          const meta = PLATFORM_META[p]
-          return (
-            <button
-              key={p}
-              onClick={() => onPlatformChange?.(activePlatform === p ? null : p)}
-              className={`platform-badge whitespace-nowrap px-2.5 py-1 rounded-full text-[11px] font-medium transition-all ${
-                activePlatform === p
-                  ? `${meta.bg} ${meta.color}`
-                  : "bg-slate-100 text-slate-500"
-              }`}
-            >
-              {meta.label}
-            </button>
-          )
-        })}
-      </div>
 
       {/* Actions */}
       <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">

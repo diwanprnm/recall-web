@@ -5,6 +5,7 @@ import { useAuth } from "@/hooks/use-auth"
 import { useItems } from "@/hooks/use-items"
 import { Sidebar } from "@/components/layout/sidebar"
 import { Header } from "@/components/layout/header"
+import { PlatformFilterBar } from "@/components/layout/platform-filter-bar"
 import { ItemCard } from "@/components/items/item-card"
 import { EmptyState } from "@/components/ui/empty-state"
 import { toast } from "@/components/ui/toaster"
@@ -79,8 +80,6 @@ function DashboardContent() {
       <Sidebar />
       <div className="flex-1 lg:ml-64">
         <Header
-          activePlatform={platformFilter ?? undefined}
-          onPlatformChange={(p) => setPlatformFilter(p ?? null)}
           viewMode={viewMode}
           onViewModeChange={setViewMode}
           onAddClick={() => setShowAddModal(true)}
@@ -126,6 +125,20 @@ function DashboardContent() {
                 return (now.getTime() - d.getTime()) / (1000 * 60 * 60 * 24) < 7
               }).length} sub="New saves" color="bg-amber-100" />
             </div>
+          )}
+
+          {/* Platform filter — horizontal scrollable row below stats */}
+          {data && data.total > 0 && (
+            <PlatformFilterBar
+              activePlatform={platformFilter}
+              onChange={setPlatformFilter}
+              countsByPlatform={(() => {
+                const counts: Record<string, number> = {}
+                data.data.forEach((i) => { counts[i.platform] = (counts[i.platform] || 0) + 1 })
+                return counts
+              })()}
+              totalCount={data.total}
+            />
           )}
 
           {/* Loading */}
