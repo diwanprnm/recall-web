@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useAuth } from "@/hooks/use-auth"
@@ -13,6 +14,8 @@ import {
   TrendingUp,
   Archive,
   Sparkles,
+  Menu,
+  X,
 } from "lucide-react"
 
 const NAV_ITEMS = [
@@ -32,14 +35,15 @@ const BOTTOM_ITEMS = [
 export function Sidebar() {
   const pathname = usePathname()
   const { user, signOut } = useAuth()
+  const [mobileOpen, setMobileOpen] = useState(false)
 
   const isActive = (href: string) => {
     if (href === "/dashboard") return pathname === "/dashboard"
     return pathname.startsWith(href)
   }
 
-  return (
-    <aside className="w-64 h-screen bg-white border-r border-slate-100 flex flex-col fixed left-0 top-0 z-30">
+  const sidebarContent = (
+    <aside className="w-64 h-full bg-white border-r border-slate-100 flex flex-col">
       {/* Logo */}
       <div className="p-5 border-b border-slate-100">
         <Link href="/dashboard" className="flex items-center gap-3">
@@ -55,16 +59,15 @@ export function Sidebar() {
         </Link>
       </div>
 
-      {/* Main nav */}
+      {/* Nav */}
       <nav className="flex-1 p-3 space-y-0.5 overflow-y-auto">
         <div className="mb-4">
-          <p className="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
-            Library
-          </p>
+          <p className="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Library</p>
           {NAV_ITEMS.map(({ href, icon: Icon, label }) => (
             <Link
               key={href}
               href={href}
+              onClick={() => setMobileOpen(false)}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 ${
                 isActive(href)
                   ? "bg-blue-50 text-blue-700 font-semibold"
@@ -76,15 +79,13 @@ export function Sidebar() {
             </Link>
           ))}
         </div>
-
         <div className="pt-3 border-t border-slate-100">
-          <p className="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
-            Organize
-          </p>
+          <p className="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Organize</p>
           {BOTTOM_ITEMS.map(({ href, icon: Icon, label }) => (
             <Link
               key={href}
               href={href}
+              onClick={() => setMobileOpen(false)}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 ${
                 isActive(href)
                   ? "bg-blue-50 text-blue-700 font-semibold"
@@ -98,13 +99,13 @@ export function Sidebar() {
         </div>
       </nav>
 
-      {/* User section */}
+      {/* User */}
       <div className="p-3 border-t border-slate-100">
         <div className="flex items-center gap-3 px-3 py-2 mb-2">
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
             {user?.email?.[0]?.toUpperCase() ?? "?"}
           </div>
-          <div className="flex-1 min-w-0">
+          <div className="flex-1 min-w-0 hidden sm:block">
             <p className="text-sm font-medium text-slate-800 truncate">
               {user?.user_metadata?.full_name || user?.email?.split("@")[0]}
             </p>
@@ -116,9 +117,32 @@ export function Sidebar() {
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-500 hover:bg-red-50 hover:text-red-600 transition-all"
         >
           <LogOut className="w-4 h-4" />
-          Sign out
+          <span className="hidden sm:inline">Sign out</span>
         </button>
       </div>
     </aside>
+  )
+
+  return (
+    <>
+      {/* Desktop sidebar (always visible) */}
+      <div className="hidden lg:block fixed top-0 left-0 h-screen z-30">{sidebarContent}</div>
+
+      {/* Mobile hamburger */}
+      <button
+        onClick={() => setMobileOpen(true)}
+        className="lg:hidden fixed top-4 left-4 z-40 w-10 h-10 bg-white rounded-xl shadow-md border flex items-center justify-center"
+      >
+        <Menu className="w-5 h-5 text-slate-700" />
+      </button>
+
+      {/* Mobile sidebar overlay */}
+      {mobileOpen && (
+        <div className="lg:hidden fixed inset-0 z-50 flex">
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
+          <div className="relative w-64 h-full shadow-2xl animate-slide-in">{sidebarContent}</div>
+        </div>
+      )}
+    </>
   )
 }

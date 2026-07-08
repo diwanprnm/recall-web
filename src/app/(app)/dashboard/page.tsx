@@ -77,7 +77,7 @@ function DashboardContent() {
   return (
     <div className="flex min-h-screen bg-slate-50">
       <Sidebar />
-      <div className="flex-1 ml-64">
+      <div className="flex-1 lg:ml-64">
         <Header
           activePlatform={platformFilter ?? undefined}
           onPlatformChange={(p) => setPlatformFilter(p ?? null)}
@@ -85,38 +85,38 @@ function DashboardContent() {
           onViewModeChange={setViewMode}
           onAddClick={() => setShowAddModal(true)}
         />
-        <main className="p-6 max-w-7xl mx-auto">
+        <main className="p-4 sm:p-5 md:p-6 max-w-7xl mx-auto pt-16 sm:pt-6">
 
           {/* Hero */}
-          <div className="mb-6 gradient-hero rounded-3xl p-6 text-white relative overflow-hidden">
+          <div className="mb-6 gradient-hero rounded-2xl sm:rounded-3xl p-5 sm:p-6 text-white relative overflow-hidden">
             <div className="absolute top-0 right-0 w-48 h-48 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2" />
             <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2" />
-            <div className="relative z-10 flex items-center justify-between">
+            <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <h2 className="text-xl font-bold mb-1">{greeting()}! 👋</h2>
+                <h2 className="text-lg sm:text-xl font-bold mb-1">{greeting()}! 👋</h2>
                 <p className="text-white/80 text-sm">
                   {data?.total ?? 0} items saved
                   {data && data.total > 0 && ` · last saved ${formatDistanceToNow(new Date(data.data[0]?.saved_at), { addSuffix: true })}`}
                 </p>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 sm:gap-3">
                 <button
                   onClick={() => setShowAddModal(true)}
-                  className="flex items-center gap-2 px-5 py-2.5 bg-white text-blue-600 rounded-xl font-semibold text-sm shadow-lg hover:shadow-xl transition"
+                  className="flex items-center gap-2 px-4 py-2 bg-white text-blue-600 rounded-xl font-semibold text-sm shadow-lg hover:shadow-xl transition flex-1 sm:flex-none justify-center"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                   </svg>
-                  Add New
+                  <span className="sm:inline">Add New</span>
                 </button>
                 <ShareToRecallButton />
               </div>
             </div>
           </div>
 
-          {/* Stats grid */}
+          {/* Stats grid — 2 col mobile, 4 col desktop */}
           {data && data.total > 0 && (
-            <div className="grid grid-cols-4 gap-4 mb-8">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6 sm:mb-8">
               <StatCard label="Total Items" value={data.total} color="bg-blue-100" />
               <StatCard label="Auto Tags" value={new Set(data.data.flatMap((i) => i.tags)).size} sub="Unique tags" color="bg-purple-100" />
               <StatCard label="Favorites" value={data.data.filter((i) => i.is_favorite).length} color="bg-pink-100" />
@@ -142,10 +142,10 @@ function DashboardContent() {
             </div>
           )}
 
-          {/* Items grid/list */}
+          {/* Items grid/list — responsive: 1 col mobile, 2 tablet, 3 desktop */}
           {!loading && data && data.data.length > 0 && (
             <div className={viewMode === "grid"
-              ? "grid grid-cols-3 gap-5 stagger-children"
+              ? "grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5 stagger-children"
               : "flex flex-col gap-3 stagger-children"
             }>
               {data.data.map((item) => (
@@ -162,11 +162,13 @@ function DashboardContent() {
 
           {/* Empty state */}
           {!loading && !error && (!data || data.data.length === 0) && (
-            <EmptyState
-              title="Your library is empty"
-              description="Start saving content from social media. Install the browser extension or paste a URL above."
-              action={{ label: "Save your first item", onClick: () => setShowAddModal(true) }}
-            />
+            <div className="px-4">
+              <EmptyState
+                title="Your library is empty"
+                description="Start saving content from social media. Install the browser extension or paste a URL above."
+                action={{ label: "Save your first item", onClick: () => setShowAddModal(true) }}
+              />
+            </div>
           )}
 
           {/* Load more */}
