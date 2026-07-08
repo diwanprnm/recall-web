@@ -12,12 +12,23 @@ export default function manifest(): MetadataRoute.Manifest {
     orientation: "portrait-primary",
     background_color: "#f8fafc",
     theme_color: "#667eea",
-    scope: "/",
+    scope: "/dashboard",
     id: "/",
     categories: ["productivity", "social", "knowledge-management"],
     lang: "en",
     dir: "auto",
     prefer_related_applications: false,
+    // Make Recall a Share Target — receive URLs shared from Twitter, Reddit, etc.
+    share_target: {
+      action: "/dashboard/share-handler",
+      method: "GET",
+      enctype: "application/x-www-form-urlencoded",
+      params: {
+        title: "title",
+        text: "text",
+        url: "url",
+      },
+    },
     shortcuts: [
       {
         name: "Library",
