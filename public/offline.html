@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#667eea" />
+    <title>Offline — Recall</title>
+    <link rel="manifest" href="/api/manifest.webmanifest" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23667eea'/><text y='.9em' font-size='80' x='50%25' text-anchor='middle'>🧠</text></svg>" />
+    <style>
+      :root {
+        --gradient-start: #667eea;
+        --gradient-end: #764ba2;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html, body {
+        height: 100%;
+        background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        color: white;
+      }
+      .container {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 32px 24px;
+        text-align: center;
+      }
+      .brain {
+        width: 96px;
+        height: 96px;
+        margin-bottom: 24px;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 56px;
+        backdrop-filter: blur(20px);
+      }
+      h1 {
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 12px;
+      }
+      p {
+        font-size: 15px;
+        opacity: 0.85;
+        max-width: 320px;
+        line-height: 1.5;
+      }
+      .retry-btn {
+        margin-top: 28px;
+        padding: 12px 24px;
+        background: white;
+        color: #2563eb;
+        border: none;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+      .retry-btn:active {
+        transform: scale(0.97);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="brain">🧠</div>
+      <h1>You're offline</h1>
+      <p>Recall needs an internet connection to fetch content. Saved items are still available once you're back online.</p>
+      <button class="retry-btn" onclick="location.reload()">Try again</button>
+    </div>
+  </body>
+</html>

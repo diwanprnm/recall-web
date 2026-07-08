@@ -31,3 +31,6 @@ build/
 # TypeScript
 *.tsbuildinfo
 next-env.d.ts
+
+# Generated PWA icons (committed — they're deterministic from our script)
+# public/icons/

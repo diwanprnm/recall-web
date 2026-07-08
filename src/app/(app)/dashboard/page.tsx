@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useCallback, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import { useAuth } from "@/hooks/use-auth"
 import { useItems } from "@/hooks/use-items"
 import { Sidebar } from "@/components/layout/sidebar"
@@ -8,10 +8,13 @@ import { Header } from "@/components/layout/header"
 import { ItemCard } from "@/components/items/item-card"
 import { EmptyState } from "@/components/ui/empty-state"
 import { toast } from "@/components/ui/toaster"
+import { ShareToRecallButton } from "@/components/pwa/share-button"
 import { type Item, type Platform } from "@/types"
 import { formatDistanceToNow } from "date-fns"
+import { useSearchParams } from "next/navigation"
 import { X, Loader2, Link as LinkIcon, ChevronDown } from "lucide-react"
 import { createItem, ApiError } from "@/lib/api"
+
 
 function StatCard({ label, value, sub, color }: { label: string; value: number | string; sub?: string; color?: string }) {
   return (
@@ -28,12 +31,24 @@ function StatCard({ label, value, sub, color }: { label: string; value: number |
   )
 }
 
-export default function DashboardPage() {
+
+function DashboardContent() {
   const { user, getJwt } = useAuth()
   const [jwt, setJwt] = useState<string | null>(null)
   const [platformFilter, setPlatformFilter] = useState<string | null>(null)
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
   const [showAddModal, setShowAddModal] = useState(false)
+  const [addUrlPrefill, setAddUrlPrefill] = useState("")
+  const searchParams = useSearchParams()
+
+  // Handle ?add_url= from Web Share API / ShareToRecallButton
+  useEffect(() => {
+    const urlParam = searchParams.get("add_url")
+    if (urlParam) {
+      setAddUrlPrefill(urlParam)
+      setShowAddModal(true)
+    }
+  }, [searchParams])
 
   // Load JWT once user is available
   useEffect(() => {
@@ -62,7 +77,6 @@ export default function DashboardPage() {
   return (
     <div className="flex min-h-screen bg-slate-50">
       <Sidebar />
-
       <div className="flex-1 ml-64">
         <Header
           activePlatform={platformFilter ?? undefined}
@@ -71,11 +85,12 @@ export default function DashboardPage() {
           onViewModeChange={setViewMode}
           onAddClick={() => setShowAddModal(true)}
         />
-
         <main className="p-6 max-w-7xl mx-auto">
-          {/* Hero stats */}
+
+          {/* Hero */}
           <div className="mb-6 gradient-hero rounded-3xl p-6 text-white relative overflow-hidden">
             <div className="absolute top-0 right-0 w-48 h-48 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2" />
+            <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2" />
             <div className="relative z-10 flex items-center justify-between">
               <div>
                 <h2 className="text-xl font-bold mb-1">{greeting()}! 👋</h2>
@@ -84,34 +99,31 @@ export default function DashboardPage() {
                   {data && data.total > 0 && ` · last saved ${formatDistanceToNow(new Date(data.data[0]?.saved_at), { addSuffix: true })}`}
                 </p>
               </div>
-              <button
-                onClick={() => setShowAddModal(true)}
-                className="flex items-center gap-2 px-5 py-2.5 bg-white text-blue-600 rounded-xl font-semibold text-sm shadow-lg hover:shadow-xl transition"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                </svg>
-                Add New
-              </button>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setShowAddModal(true)}
+                  className="flex items-center gap-2 px-5 py-2.5 bg-white text-blue-600 rounded-xl font-semibold text-sm shadow-lg hover:shadow-xl transition"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                  </svg>
+                  Add New
+                </button>
+                <ShareToRecallButton />
+              </div>
             </div>
           </div>
 
           {/* Stats grid */}
           {data && data.total > 0 && (
             <div className="grid grid-cols-4 gap-4 mb-8">
-              <StatCard label="Total Items" value={data.total} sub="All platforms" color="bg-blue-100" />
-              <StatCard
-                label="Auto Tags"
-                value={new Set(data.data.flatMap((i) => i.tags)).size}
-                sub="Unique tags"
-                color="bg-purple-100"
-              />
+              <StatCard label="Total Items" value={data.total} color="bg-blue-100" />
+              <StatCard label="Auto Tags" value={new Set(data.data.flatMap((i) => i.tags)).size} sub="Unique tags" color="bg-purple-100" />
               <StatCard label="Favorites" value={data.data.filter((i) => i.is_favorite).length} color="bg-pink-100" />
               <StatCard label="This Week" value={data.data.filter((i) => {
                 const d = new Date(i.saved_at)
                 const now = new Date()
-                const diff = (now.getTime() - d.getTime()) / (1000 * 60 * 60 * 24)
-                return diff < 7
+                return (now.getTime() - d.getTime()) / (1000 * 60 * 60 * 24) < 7
               }).length} sub="New saves" color="bg-amber-100" />
             </div>
           )}
@@ -130,7 +142,7 @@ export default function DashboardPage() {
             </div>
           )}
 
-          {/* Items grid */}
+          {/* Items grid/list */}
           {!loading && data && data.data.length > 0 && (
             <div className={viewMode === "grid"
               ? "grid grid-cols-3 gap-5 stagger-children"
@@ -176,6 +188,7 @@ export default function DashboardPage() {
       {showAddModal && (
         <AddItemModal
           jwt={jwt}
+          initialUrl={addUrlPrefill}
           onClose={() => setShowAddModal(false)}
           onSuccess={() => {
             refetch()
@@ -188,10 +201,14 @@ export default function DashboardPage() {
   )
 }
 
-// ── Add Item Modal ─────────────────────────────────────────────────────────────
 
-function AddItemModal({ jwt, onClose, onSuccess }: { jwt: string | null; onClose: () => void; onSuccess: () => void }) {
-  const [url, setUrl] = useState("")
+function AddItemModal({ jwt, initialUrl, onClose, onSuccess }: {
+  jwt: string | null
+  initialUrl: string
+  onClose: () => void
+  onSuccess: () => void
+}) {
+  const [url, setUrl] = useState(initialUrl || "")
   const [platform, setPlatform] = useState<Platform>("web")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -223,10 +240,7 @@ function AddItemModal({ jwt, onClose, onSuccess }: { jwt: string | null; onClose
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Backdrop */}
       <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
-
-      {/* Modal */}
       <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md border">
         <div className="flex items-center justify-between p-5 border-b">
           <h2 className="text-lg font-semibold text-slate-900">Save new content</h2>
@@ -234,13 +248,9 @@ function AddItemModal({ jwt, onClose, onSuccess }: { jwt: string | null; onClose
             <X className="w-4 h-4 text-slate-500" />
           </button>
         </div>
-
         <form onSubmit={handleSubmit} className="p-5 space-y-4">
-          {/* URL */}
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
-              URL
-            </label>
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">URL</label>
             <div className="relative">
               <LinkIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <input
@@ -253,8 +263,6 @@ function AddItemModal({ jwt, onClose, onSuccess }: { jwt: string | null; onClose
               />
             </div>
           </div>
-
-          {/* Platform */}
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1.5">Platform</label>
             <select
@@ -267,13 +275,9 @@ function AddItemModal({ jwt, onClose, onSuccess }: { jwt: string | null; onClose
               ))}
             </select>
           </div>
-
           {error && (
-            <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-sm text-red-700">
-              {error}
-            </div>
+            <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-sm text-red-700">{error}</div>
           )}
-
           <button
             type="submit"
             disabled={loading || !jwt || !url.trim()}
@@ -285,5 +289,18 @@ function AddItemModal({ jwt, onClose, onSuccess }: { jwt: string | null; onClose
         </form>
       </div>
     </div>
+  )
+}
+
+
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
+      </div>
+    }>
+      <DashboardContent />
+    </Suspense>
   )
 }
