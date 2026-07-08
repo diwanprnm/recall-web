@@ -1,0 +1,23 @@
+# Node
+node_modules/
+.next/
+out/
+build/
+
+# Misc
+.DS_Store
+*.pem
+
+# Local env files (passed at runtime, not bundled)
+.env*.local
+.env.local
+.env
+
+# Vercel
+.vercel
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Generated PWA assets are still committed
