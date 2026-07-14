@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     "linkedin",
   ],
   authors: [{ name: "theone" }],
-  manifest: "/api/manifest.webmanifest",
+  manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",

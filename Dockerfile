@@ -35,9 +35,10 @@ RUN groupadd -r recall && useradd -r recall -g recall \
     && chown -R recall:recall /app
 USER recall
 
-EXPOSE 3000
+EXPOSE 3001
 
 HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
-    CMD curl -fsS http://localhost:3000/ || exit 1
+    CMD curl -fsS http://localhost:3001/ || exit 1
 
 CMD ["node", "server.js"]
+
