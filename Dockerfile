@@ -2,9 +2,19 @@
 # Next.js frontend
 # Multi-stage: builder compiles, runtime serves via standalone output
 
+# Build-time arguments for Next.js (these must be passed at build time via --build-arg)
+ARG NEXT_PUBLIC_SUPABASE_URL
+ARG NEXT_PUBLIC_SUPABASE_ANON_KEY
+ARG NEXT_PUBLIC_API_URL
+
 FROM node:20-slim AS builder
 
 WORKDIR /app
+
+# Pass build args to env so Next.js can use them during build
+ENV NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL} \
+    NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY} \
+    NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
 
 COPY package.json package-lock.json ./
 RUN npm ci --ignore-scripts
