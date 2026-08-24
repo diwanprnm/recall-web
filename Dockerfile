@@ -2,15 +2,20 @@
 # Next.js frontend
 # Multi-stage: builder compiles, runtime serves via standalone output
 
+# Build-time arguments for Next.js (these must be passed at build time via --build-arg)
+ARG NEXT_PUBLIC_SUPABASE_URL
+ARG NEXT_PUBLIC_SUPABASE_ANON_KEY
+ARG NEXT_PUBLIC_API_URL
+
 FROM node:20-slim AS builder
 
 WORKDIR /app
 
-# Build-time args for NEXT_PUBLIC_* env vars (passed from docker-compose)
-ARG NEXT_PUBLIC_API_URL
-
-# Expose build args as env so Next.js inlines them at build time
-ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+# Pass build args to env so Next.js can inline them at build time
+# (next.config.ts reads NEXT_PUBLIC_SUPABASE_* and NEXT_PUBLIC_API_URL)
+ENV NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL} \
+    NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY} \
+    NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
 
 # 1. Install dependencies dulu (layer cache stabil — hanya berubah kalau package*.json berubah)
 COPY package.json package-lock.json ./
