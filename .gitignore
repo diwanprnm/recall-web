@@ -32,5 +32,10 @@ build/
 *.tsbuildinfo
 next-env.d.ts
 
+.claude/
+
 # Generated PWA icons (committed — they're deterministic from our script)
 # public/icons/
+
+# graft's local graph cache — regenerable, not committed (run `graft build`).
+graft/

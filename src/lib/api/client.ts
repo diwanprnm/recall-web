@@ -1,10 +1,13 @@
 /**
  * Recall API client — talks to FastAPI backend (recall-api)
  *
- * All calls require Supabase JWT in Authorization header.
- * The JWT is obtained from Supabase Auth.
+ * All calls send the backend-issued JWT in the Authorization header.
+ * The JWT is obtained from /api/auth/login (or /register) and stored by
+ * lib/auth/token.ts.
  */
 import type {
+  DigestFrequency,
+  DigestSettings,
   Item,
   ItemCreate,
   ItemUpdate,
@@ -14,7 +17,9 @@ import type {
   UserProfile,
 } from "@/types"
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
+// Requests go to relative paths — next.config rewrites /api/* and /health to the
+// backend, so the browser stays same-origin and never sends a CORS preflight.
+const API_PREFIX = ""
 
 async function request<T>(
   path: string,
@@ -22,7 +27,7 @@ async function request<T>(
 ): Promise<T> {
   const { jwt, ...fetchOptions } = options
 
-  const res = await fetch(`${API_URL}${path}`, {
+  const res = await fetch(`${API_PREFIX}${path}`, {
     ...fetchOptions,
     headers: {
       "Content-Type": "application/json",
@@ -62,6 +67,7 @@ export async function listItems(
   params: {
     platform?: string
     tag?: string
+    category?: string
     is_favorite?: boolean
     is_archived?: boolean
     page?: number
@@ -72,6 +78,7 @@ export async function listItems(
   const sp = new URLSearchParams()
   if (params.platform) sp.set("platform", params.platform)
   if (params.tag) sp.set("tag", params.tag)
+  if (params.category) sp.set("category_id", params.category)
   if (params.is_favorite !== undefined)
     sp.set("is_favorite", String(params.is_favorite))
   if (params.is_archived !== undefined)
@@ -82,7 +89,7 @@ export async function listItems(
 
   const qs = sp.toString()
   return request<PaginatedResponse<Item>>(
-    `/api/items${qs ? `?${qs}` : ""}`,
+    qs ? `/api/items?${qs}` : "/api/items",
     { jwt }
   )
 }
@@ -95,7 +102,7 @@ export async function createItem(
   jwt: string,
   payload: ItemCreate
 ): Promise<Item> {
-  return request<Item>("/api/items", {
+  return request<Item>("/api/items/quick", {
     method: "POST",
     jwt,
     body: JSON.stringify(payload),
@@ -155,6 +162,85 @@ export async function findRelated(
     `/api/search/related/${itemId}?limit=${limit}`,
     { jwt }
   )
+}
+
+// ── Categories ────────────────────────────────────────────────────────────────
+
+export async function listCategories(
+  jwt: string
+): Promise<{ id: string; user_id: string; name: string; color: string }[]> {
+  return request("/api/categories", { jwt })
+}
+
+export async function createCategory(
+  jwt: string,
+  payload: { name: string; color: string }
+): Promise<{ id: string; user_id: string; name: string; color: string }> {
+  return request("/api/categories", {
+    method: "POST",
+    jwt,
+    body: JSON.stringify(payload),
+  })
+}
+
+export async function updateCategory(
+  jwt: string,
+  categoryId: string,
+  payload: { name?: string; color?: string }
+): Promise<{ id: string; user_id: string; name: string; color: string }> {
+  return request(`/api/categories/${categoryId}`, {
+    method: "PATCH",
+    jwt,
+    body: JSON.stringify(payload),
+  })
+}
+
+export async function deleteCategory(
+  jwt: string,
+  categoryId: string
+): Promise<{ success: boolean }> {
+  return request(`/api/categories/${categoryId}`, { method: "DELETE", jwt })
+}
+
+// ── Counts ─────────────────────────────────────────────────────────────────────
+
+export async function getItemCounts(
+  jwt: string,
+  params: { platform?: string; category_id?: string } = {}
+): Promise<{
+  total: number
+  by_platform: Record<string, number>
+  by_category: Record<string, number>
+}> {
+  const sp = new URLSearchParams()
+  if (params.platform) sp.set("platform", params.platform)
+  if (params.category_id) sp.set("category_id", params.category_id)
+  const qs = sp.toString()
+  const url = qs ? `/api/items/counts?${qs}` : "/api/items/counts"
+  return request(url, { jwt })
+}
+
+// ── Digest ────────────────────────────────────────────────────────────────────
+
+export async function getDigestSettings(jwt: string): Promise<DigestSettings> {
+  return request<DigestSettings>("/api/digest/settings", { jwt })
+}
+
+export async function updateDigestSettings(
+  jwt: string,
+  payload: { enabled?: boolean; frequency?: DigestFrequency }
+): Promise<DigestSettings> {
+  return request<DigestSettings>("/api/digest/settings", {
+    method: "PATCH",
+    jwt,
+    body: JSON.stringify(payload),
+  })
+}
+
+export async function generateDigest(
+  jwt: string
+): Promise<{ items: Item[]; count: number }> {
+  return request("/api/digest/generate", { method: "POST", jwt })
 }
 
 // ── Health ─────────────────────────────────────────────────────────────────────

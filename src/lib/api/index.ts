@@ -1,1 +1,1 @@
-export { getProfile, listItems, getItem, createItem, updateItem, deleteItem, reanalyseItem, semanticSearch, findRelated, healthCheck, ApiError } from "./client"
+export { getProfile, listItems, getItem, createItem, updateItem, deleteItem, reanalyseItem, semanticSearch, findRelated, healthCheck, listCategories, createCategory, updateCategory, deleteCategory, getItemCounts, getDigestSettings, updateDigestSettings, generateDigest, ApiError } from "./client"

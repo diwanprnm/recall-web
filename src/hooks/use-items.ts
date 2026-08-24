@@ -8,6 +8,7 @@ interface UseItemsOptions {
   jwt: string | null
   platform?: string
   tag?: string
+  category?: string
   isFavorite?: boolean
   isArchived?: boolean
   search?: string
@@ -16,7 +17,7 @@ interface UseItemsOptions {
 }
 
 export function useItems(options: UseItemsOptions) {
-  const { jwt, platform, tag, isFavorite, isArchived, search, page = 1, perPage = 20 } = options
+  const { jwt, platform, tag, category, isFavorite, isArchived, search, page = 1, perPage = 20 } = options
 
   const [data, setData] = useState<PaginatedResponse<Item> | null>(null)
   const [loading, setLoading] = useState(false)
@@ -30,6 +31,7 @@ export function useItems(options: UseItemsOptions) {
       const result = await listItems(jwt, {
         platform,
         tag,
+        category,
         is_favorite: isFavorite,
         is_archived: isArchived,
         search,
@@ -42,7 +44,7 @@ export function useItems(options: UseItemsOptions) {
     } finally {
       setLoading(false)
     }
-  }, [jwt, platform, tag, isFavorite, isArchived, search, page, perPage])
+  }, [jwt, platform, tag, category, isFavorite, isArchived, search, page, perPage])
 
   useEffect(() => {
     fetch()

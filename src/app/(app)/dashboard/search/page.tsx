@@ -3,14 +3,14 @@
 import { useState, useEffect, Suspense } from "react"
 import { useAuth } from "@/hooks/use-auth"
 import { useSearch } from "@/hooks/use-search"
+import { Sidebar } from "@/components/layout/sidebar"
 import { Header } from "@/components/layout/header"
 import { ItemCard } from "@/components/items/item-card"
 import { EmptyState } from "@/components/ui/empty-state"
 import { Search, Loader2, Zap } from "lucide-react"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useSearchParams } from "next/navigation"
 
 function SearchContent() {
-  const router = useRouter()
   const searchParams = useSearchParams()
   const { user, getJwt } = useAuth()
   const [jwt, setJwt] = useState<string | null>(null)
@@ -29,7 +29,6 @@ function SearchContent() {
   async function handleSearch(e: React.FormEvent) {
     e.preventDefault()
     if (!query.trim()) return
-    router.push(`/dashboard/search?q=${encodeURIComponent(query.trim())}`)
     await search(query.trim(), { platform: activePlatform ?? undefined })
   }
 
@@ -41,7 +40,10 @@ function SearchContent() {
   ]
 
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="flex min-h-screen bg-slate-50 overflow-x-hidden">
+      <Sidebar />
+      <div className="flex-1 min-w-0 lg:pl-64">
+        <Header viewMode="grid" onViewModeChange={() => {}} />
       {/* Search bar */}
       <form onSubmit={handleSearch} className="sticky top-0 z-20 bg-white border-b px-6 py-4">
         <div className="max-w-3xl mx-auto flex gap-3">
@@ -52,14 +54,14 @@ function SearchContent() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Ask anything — 'things about AI coding assistants' or 'marketing strategies for B2B SaaS'..."
-              className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition search-input"
+              className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-[#5CC061] focus:bg-white transition search-input"
             />
-            {loading && <Loader2 className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 animate-spin text-blue-500" />}
+            {loading && <Loader2 className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 animate-spin text-[#5CC061]" />}
           </div>
           <button
             type="submit"
             disabled={!query.trim() || loading}
-            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl text-sm font-medium transition disabled:opacity-50 flex items-center gap-2"
+            className="px-6 py-3 bg-[#5CC061] hover:bg-[#1F8932] text-white rounded-2xl text-sm font-medium transition disabled:opacity-50 flex items-center gap-2"
           >
             <Zap className="w-4 h-4" />
             Search
@@ -77,7 +79,7 @@ function SearchContent() {
                   setQuery(q)
                   search(q)
                 }}
-                className="text-xs text-blue-600 bg-blue-50 hover:bg-blue-100 px-2.5 py-1 rounded-full transition"
+                className="text-xs text-[#1F8932] bg-[#5CC061]/10 hover:bg-[#5CC061]/20 px-2.5 py-1 rounded-full transition"
               >
                 {q}
               </button>
@@ -96,7 +98,7 @@ function SearchContent() {
               <em>&ldquo;{results.query}&rdquo;</em>
             </p>
             <span className="text-xs text-slate-400">{Math.round(results.took_ms)}ms</span>
-            <button onClick={clear} className="text-xs text-blue-600 hover:underline ml-auto">
+            <button onClick={clear} className="text-xs text-[#1F8932] hover:underline ml-auto">
               Clear
             </button>
           </div>
@@ -158,6 +160,7 @@ function SearchContent() {
           />
         )}
       </div>
+      </div>
     </div>
   )
 }
@@ -166,7 +169,7 @@ export default function SearchPage() {
   return (
     <Suspense fallback={
       <div className="flex-1 flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
+        <Loader2 className="w-8 h-8 animate-spin text-[#5CC061]" />
       </div>
     }>
       <SearchContent />

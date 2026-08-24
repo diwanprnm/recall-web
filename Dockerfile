@@ -6,13 +6,19 @@ FROM node:20-slim AS builder
 
 WORKDIR /app
 
+# Build-time args for NEXT_PUBLIC_* env vars (passed from docker-compose)
+ARG NEXT_PUBLIC_API_URL
+
+# Expose build args as env so Next.js inlines them at build time
+ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+
+# 1. Install dependencies dulu (layer cache stabil — hanya berubah kalau package*.json berubah)
 COPY package.json package-lock.json ./
 RUN npm ci --ignore-scripts
 
-# Copy source (including .env.local used during build)
+# 2. Copy source code lalu build (tidak merusak cache layer npm ci)
 COPY . .
 
-# Build standalone output
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
@@ -23,7 +29,9 @@ FROM node:20-slim AS runtime
 WORKDIR /app
 
 ENV NODE_ENV=production \
-    NEXT_TELEMETRY_DISABLED=1
+    NEXT_TELEMETRY_DISABLED=1 \
+    PORT=3001 \
+    HOSTNAME="0.0.0.0"
 
 # Copy built output
 COPY --from=builder /app/.next/standalone ./
@@ -38,7 +46,7 @@ USER recall
 EXPOSE 3001
 
 HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
-    CMD curl -fsS http://localhost:3001/ || exit 1
+    CMD node -e "require('http').get('http://localhost:3001/', r => { process.exit(r.statusCode === 200 ? 0 : 1) }).on('error', () => process.exit(1))"
 
 CMD ["node", "server.js"]
 
