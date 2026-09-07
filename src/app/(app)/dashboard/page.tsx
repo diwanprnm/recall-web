@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect, useCallback, Suspense } from "react";
+import { useState, useEffect, useCallback, useMemo, Suspense } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { useItems } from "@/hooks/use-items";
 import { Sidebar } from "@/components/layout/sidebar";
 import { Header } from "@/components/layout/header";
-import { PlatformFilterBar } from "@/components/layout/platform-filter-bar";
+import { FilterBar } from "@/components/layout/filter-bar";
 import { ItemCard } from "@/components/items/item-card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { toast } from "@/components/ui/toaster";
@@ -91,7 +91,6 @@ function DashboardContent() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [addUrlPrefill, setAddUrlPrefill] = useState("");
   const [editingItem, setEditingItem] = useState<Item | null>(null);
-  const [showMoreCategories, setShowMoreCategories] = useState(false);
   const searchParams = useSearchParams();
   const router = useRouter();
   const categoryFilter = searchParams.get("category");
@@ -105,14 +104,6 @@ function DashboardContent() {
     }
     router.push(`?${params.toString()}`);
   };
-
-  // Close "More" dropdown on outside click
-  useEffect(() => {
-    if (!showMoreCategories) return;
-    const handler = () => setShowMoreCategories(false);
-    document.addEventListener("click", handler);
-    return () => document.removeEventListener("click", handler);
-  }, [showMoreCategories]);
 
   // Handle ?add_url= from Web Share API / ShareToRecallButton.
   // We adjust state during render (React's recommended pattern) to avoid a
@@ -175,6 +166,22 @@ function DashboardContent() {
   useEffect(() => {
     fetchCounts();
   }, [fetchCounts]);
+
+  // Map name-keyed counts (from the backend) to category ids so each pill
+  // can look up its count by id — immune to name casing/collisions.
+  const categoryCountsById = useMemo(() => {
+    if (!categoryCounts) return undefined;
+    const byName = new Map<string, number>();
+    for (const [name, count] of Object.entries(categoryCounts.by_category)) {
+      byName.set(name.toLowerCase(), count);
+    }
+    const out: Record<string, number> = {};
+    for (const cat of categories) {
+      const count = byName.get(cat.name.toLowerCase());
+      if (count) out[cat.id] = count;
+    }
+    return out;
+  }, [categoryCounts, categories]);
 
   const { data, loading, error, refetch, update } = useItems({
     jwt,
@@ -291,109 +298,18 @@ function DashboardContent() {
             </div>
           )}
 
-          {/* Category tabs */}
-          {data && data.total > 0 && categories.length > 0 && (
-            <div className="mb-4 flex items-center gap-1 border-b border-slate-200 overflow-x-auto scrollbar-hide">
-              <button
-                onClick={() => handleCategoryChange(null)}
-                className={`flex-shrink-0 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
-                  !categoryFilter
-                    ? "border-[#1F8932] text-[#1F8932]"
-                    : "border-transparent text-slate-500 hover:text-slate-700"
-                }`}
-              >
-                All
-                {categoryCounts && (
-                  <span className="ml-1.5 text-xs text-slate-400">
-                    {categoryCounts.total}
-                  </span>
-                )}
-              </button>
-              {categories.slice(0, 3).map((cat) => (
-                <button
-                  key={cat.id}
-                  onClick={() => handleCategoryChange(cat.id)}
-                  className={`flex-shrink-0 flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
-                    categoryFilter === cat.id
-                      ? "border-[#1F8932] text-[#1F8932]"
-                      : "border-transparent text-slate-500 hover:text-slate-700"
-                  }`}
-                >
-                  <span
-                    className="w-2 h-2 rounded-full flex-shrink-0"
-                    style={{ backgroundColor: cat.color }}
-                  />
-                  {cat.name}
-                  {categoryCounts && (
-                    <span className="text-xs text-slate-400">
-                      {categoryCounts.by_category[cat.name] ??
-                        categoryCounts.by_category[cat.name.toLowerCase()] ??
-                        0}
-                    </span>
-                  )}
-                </button>
-              ))}
-              {categories.length > 3 && (
-                <div className="relative flex-shrink-0">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setShowMoreCategories(!showMoreCategories);
-                    }}
-                    className={`flex items-center gap-1 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
-                      categories.slice(3).some((c) => c.id === categoryFilter)
-                        ? "border-[#1F8932] text-[#1F8932]"
-                        : "border-transparent text-slate-500 hover:text-slate-700"
-                    }`}
-                  >
-                    More
-                    <ChevronDown className="w-3.5 h-3.5" />
-                  </button>
-                  {showMoreCategories && (
-                    <div className="absolute top-full left-0 mt-1 bg-white rounded-xl shadow-lg border border-slate-100 py-1 z-50 min-w-[160px]">
-                      {categories.slice(3).map((cat) => (
-                        <button
-                          key={cat.id}
-                          onClick={() => {
-                            handleCategoryChange(cat.id);
-                            setShowMoreCategories(false);
-                          }}
-                          className={`w-full flex items-center gap-2 px-3 py-2 text-sm transition-colors ${
-                            categoryFilter === cat.id
-                              ? "bg-[#5CC061]/10 text-[#1F8932]"
-                              : "text-slate-600 hover:bg-slate-50"
-                          }`}
-                        >
-                          <span
-                            className="w-2 h-2 rounded-full flex-shrink-0"
-                            style={{ backgroundColor: cat.color }}
-                          />
-                          {cat.name}
-                          {categoryCounts && (
-                            <span className="ml-auto text-xs text-slate-400">
-                              {categoryCounts.by_category[cat.name] ??
-                                categoryCounts.by_category[
-                                  cat.name.toLowerCase()
-                                ] ??
-                                0}
-                            </span>
-                          )}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Platform filter */}
+          {/* Unified category + platform filters */}
           {data && data.total > 0 && (
-            <PlatformFilterBar
+            <FilterBar
               activePlatform={platformFilter}
-              onChange={setPlatformFilter}
-              countsByPlatform={platformCounts?.by_platform}
-              totalCount={platformCounts?.total ?? data.total}
+              onPlatformChange={setPlatformFilter}
+              platformCounts={platformCounts?.by_platform}
+              platformTotal={platformCounts?.total ?? data.total}
+              categories={categories}
+              activeCategory={categoryFilter}
+              onCategoryChange={handleCategoryChange}
+              categoryCounts={categoryCountsById}
+              categoryTotal={categoryCounts?.total ?? data.total}
             />
           )}
 
