@@ -222,6 +222,7 @@ export default function CategoriesPage() {
   }, [user, jwt, getJwt]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchCategories();
   }, [fetchCategories]);
 

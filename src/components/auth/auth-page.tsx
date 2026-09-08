@@ -15,6 +15,7 @@ export function AuthPage() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (authError) setError(authError)
   }, [authError])
 

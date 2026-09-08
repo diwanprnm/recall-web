@@ -84,6 +84,7 @@ export function useAuth() {
 
   useEffect(() => {
     // Join the shared store.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setState(_state)
     const unsub = _subscribe(setState)
 

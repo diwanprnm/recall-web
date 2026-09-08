@@ -561,6 +561,7 @@ function AddItemModal({
                   type="button"
                   role="combobox"
                   aria-expanded={catOpen}
+                  aria-controls="category-popover"
                   className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-[#5CC061] focus:bg-white transition text-sm text-left"
                 >
                   <span

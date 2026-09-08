@@ -23,10 +23,12 @@ export function PWAInstallButton() {
   useEffect(() => {
     // Check if already installed (display-mode: standalone)
     const standalone = window.matchMedia("(display-mode: standalone)").matches
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setInstalled(standalone)
     if (standalone) return
 
     // Check iOS
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream
     if (isIOS && !standalone) {
       setShowIOSHint(true)
@@ -88,7 +90,7 @@ export function PWAInstallButton() {
               Tap{" "}
               <Share className="inline w-3.5 h-3.5 mb-0.5" />
               {" "}then{" "}
-              <span className="font-semibold">"Add to Home Screen"</span> for quick access.
+              <span className="font-semibold">&quot;Add to Home Screen&quot;</span> for quick access.
             </p>
           </div>
         </div>

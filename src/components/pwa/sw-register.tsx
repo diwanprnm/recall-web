@@ -39,6 +39,7 @@ export function ServiceWorkerRegister() {
 
     // Defer to next idle to not block initial render
     if ("requestIdleCallback" in window) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ;(window as any).requestIdleCallback(register, { timeout: 2000 })
     } else {
       setTimeout(register, 1500)

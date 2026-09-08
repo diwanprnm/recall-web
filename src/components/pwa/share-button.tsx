@@ -20,9 +20,9 @@ interface ShareToRecallButtonProps {
 export function ShareToRecallButton({ fallbackUrl }: ShareToRecallButtonProps) {
   const router = useRouter();
   const [supported, setSupported] = useState(false);
-  const [hover, setHover] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSupported(typeof navigator !== "undefined" && "share" in navigator);
   }, []);
 
@@ -54,8 +54,6 @@ export function ShareToRecallButton({ fallbackUrl }: ShareToRecallButtonProps) {
   return (
     <button
       onClick={shareOrFallback}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
       className="flex items-center gap-2 px-4 py-2.5 bg-[#5CC061] hover:bg-[#1F8932] text-white rounded-xl text-sm font-semibold transition shadow-lg shadow-blue-500/30"
       title={supported ? "Share to Recall" : "Add URL to Recall"}
     >

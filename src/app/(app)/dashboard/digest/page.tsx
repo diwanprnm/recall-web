@@ -52,6 +52,7 @@ export default function DigestPage() {
   // Load settings
   useEffect(() => {
     if (!jwt) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSettingsLoading(true);
     getDigestSettings(jwt)
       .then((s) => {

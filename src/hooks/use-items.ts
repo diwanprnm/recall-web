@@ -47,6 +47,8 @@ export function useItems(options: UseItemsOptions) {
   }, [jwt, platform, tag, category, isFavorite, isArchived, search, page, perPage])
 
   useEffect(() => {
+    // fetch-on-change is intentional; new react-hooks rule false-positives here
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetch()
   }, [fetch])
 

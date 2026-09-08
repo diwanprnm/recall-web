@@ -1,6 +1,5 @@
 "use client"
 
-import { useEffect, useState, useCallback } from "react"
 import type { ToastOptions } from "@/components/ui/toaster"
 
 type ToastTrigger = ToastOptions

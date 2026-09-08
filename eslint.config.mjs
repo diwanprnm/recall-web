@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // graft tooling (generated, not app code)
+    "**/graft-*.cjs",
+    "graft-hooks.cjs",
+    "graft-statusline.cjs",
   ]),
 ]);
 

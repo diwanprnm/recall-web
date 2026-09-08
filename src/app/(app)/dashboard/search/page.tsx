@@ -15,7 +15,7 @@ function SearchContent() {
   const { user, getJwt } = useAuth()
   const [jwt, setJwt] = useState<string | null>(null)
   const [query, setQuery] = useState(searchParams.get("q") || "")
-  const [activePlatform, setActivePlatform] = useState<string | null>(null)
+  const [activePlatform] = useState<string | null>(null)
 
   // Load JWT
   useEffect(() => {

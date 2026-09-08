@@ -11,7 +11,6 @@ import {
   TrendingUp,
   Archive,
   Menu,
-  X,
 } from "lucide-react";
 import Image from "next/image";
 

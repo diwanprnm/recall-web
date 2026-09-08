@@ -2,12 +2,15 @@
 # Next.js frontend
 # Multi-stage: builder compiles, runtime serves via standalone output
 
-# Build-time arguments for Next.js (these must be passed at build time via --build-arg)
+FROM node:20-slim AS builder
+
+# Build-time arguments for Next.js (passed via --build-arg / compose build.args).
+# Re-declared inside the stage: ARGs before the first FROM are only visible to
+# FROM instructions, so the ENV below would silently expand to empty and
+# next.config.ts would bake the localhost fallback into rewrites.
 ARG NEXT_PUBLIC_SUPABASE_URL
 ARG NEXT_PUBLIC_SUPABASE_ANON_KEY
 ARG NEXT_PUBLIC_API_URL
-
-FROM node:20-slim AS builder
 
 WORKDIR /app
 
