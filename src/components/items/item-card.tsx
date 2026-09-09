@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import { Heart, ExternalLink, Archive, Pencil } from "lucide-react"
 import type { Item } from "@/types"
 import { PLATFORM_META } from "@/types"
@@ -12,6 +13,25 @@ interface ItemCardProps {
   onArchive?: (item: Item) => void
   onEdit?: (item: Item) => void
   onClick?: (item: Item) => void
+}
+
+// ponytail: IG blocks server-side image extraction (no public oEmbed since 2020) —
+// client-side unavatar.io fills the gap while logged-out; swap for a token-based
+// Graph API fetch if it ever rate-limits or unavatar disappears.
+function igAvatarUrl(item: Item): string | null {
+  if (item.platform !== "instagram") return null
+  let handle: string | null = item.author_handle || null
+  if (!handle) {
+    try {
+      const parts = new URL(item.url).pathname.split("/").filter(Boolean)
+      if (parts[0] && !["p", "reel", "tv", "explore", "stories"].includes(parts[0])) {
+        handle = parts[0]
+      }
+    } catch {
+      /* invalid URL — leave null */
+    }
+  }
+  return handle ? `https://unavatar.io/instagram/${handle}?fallback=false` : null
 }
 
 // Platform icons as SVG paths. `size` controls the icon dimensions — use a
@@ -77,8 +97,33 @@ function PlatformIcon({ platform, size = "w-3.5 h-3.5" }: { platform: string; si
   )
 }
 
-function QualityBadge({ score }: { score: number | null }) {
-  if (!score) return null
+// IG avatar with graceful fallback: unavatar fails (403/rate-limit) → platform icon placeholder.
+function IgAvatar({
+  src,
+  meta,
+  size,
+  imgClassName = "w-full h-full object-cover",
+}: {
+  src: string
+  meta: { bg: string; color: string }
+  size: string
+  imgClassName?: string
+}) {
+  const [failed, setFailed] = useState(false)
+  if (failed) {
+    return (
+      <div className={`w-full h-full flex items-center justify-center ${meta.bg} ${meta.color}`}>
+        <PlatformIcon platform="instagram" size={size} />
+      </div>
+    )
+  }
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img src={src} alt="" className={imgClassName} onError={() => setFailed(true)} loading="lazy" />
+  )
+}
+
+function QualityBadge({ score }: { score: number | null }) {  if (!score) return null
   const colors: Record<number, string> = {
     5: "bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400",
     4: "bg-green-100 dark:bg-green-950/60 text-green-700 dark:text-green-400",
@@ -98,6 +143,7 @@ export function ItemCard({ item, viewMode, onFavorite, onArchive, onEdit, onClic
   const timeAgo = item.saved_at
     ? formatDistanceToNow(new Date(item.saved_at), { addSuffix: true })
     : ""
+  const igAvatar = igAvatarUrl(item)
 
   if (viewMode === "list") {
     return (
@@ -110,6 +156,8 @@ export function ItemCard({ item, viewMode, onFavorite, onArchive, onEdit, onClic
           {item.thumbnail_url ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={item.thumbnail_url} alt="" className="w-full h-full object-cover" />
+          ) : igAvatar ? (
+            <IgAvatar src={igAvatar} meta={meta} size="w-8 h-8" />
           ) : (
             <div className={`w-full h-full flex items-center justify-center ${meta.bg} ${meta.color}`}>
               <PlatformIcon platform={item.platform} size="w-8 h-8" />
@@ -185,6 +233,8 @@ export function ItemCard({ item, viewMode, onFavorite, onArchive, onEdit, onClic
         {item.thumbnail_url ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={item.thumbnail_url} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+        ) : igAvatar ? (
+          <IgAvatar src={igAvatar} meta={meta} size="w-10 h-10" imgClassName="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
         ) : (
           <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-white/60 dark:bg-slate-800/60">
             <PlatformIcon platform={item.platform} size="w-10 h-10" />
