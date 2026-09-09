@@ -440,6 +440,39 @@ function DashboardContent() {
   );
 }
 
+// ponytail: Reddit 403s server-side fetches from datacenter IPs — browser-side
+// prefill works around it while user IPs stay allowed; replace with Reddit OAuth
+// (free script-app token) if reddit ever CORS-blocks .json too.
+async function fetchRedditPrefill(
+  url: string
+): Promise<Partial<{ title: string; text: string; thumbnail_url: string; author: string; author_handle: string }>> {
+  try {
+    const u = new URL(url);
+    if (!/(^|\.)reddit\.com$/.test(u.hostname)) return {};
+    const res = await fetch(u.origin + u.pathname.replace(/\/$/, "") + ".json?limit=1", {
+      headers: { Accept: "application/json" },
+    });
+    if (!res.ok) return {};
+    const data = await res.json();
+    const post = data?.[0]?.data?.children?.[0]?.data;
+    if (!post) return {};
+    const previewImg = post?.preview?.images?.[0]?.source?.url;
+    return {
+      title: post.title || undefined,
+      text: post.selftext || undefined,
+      thumbnail_url: previewImg
+        ? previewImg.replace(/&amp;/g, "&")
+        : post.thumbnail?.startsWith("http")
+          ? post.thumbnail
+          : undefined,
+      author: undefined,
+      author_handle: post.author || undefined,
+    };
+  } catch {
+    return {};
+  }
+}
+
 function AddItemModal({
   jwt,
   initialUrl,
@@ -467,10 +500,15 @@ function AddItemModal({
     setLoading(true);
     setError(null);
     try {
+      // Reddit hard-blocks datacenter IPs, so the browser (user's IP) fetches
+      // the post JSON and prefills the payload — server skips its extraction
+      // when text is present. Failure is silent; server fallback still runs.
+      const prefill = await fetchRedditPrefill(url.trim());
       await createItem(jwt, {
         url: url.trim(),
         platform,
         override_category: categoryId || undefined,
+        ...prefill,
       });
       onSuccess();
     } catch (err) {
