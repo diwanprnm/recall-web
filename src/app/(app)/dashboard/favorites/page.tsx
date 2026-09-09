@@ -32,7 +32,7 @@ export default function FavoritesPage() {
   };
 
   return (
-    <div className="flex min-h-screen bg-slate-50 overflow-x-hidden">
+    <div className="flex min-h-screen bg-slate-50 dark:bg-slate-950 overflow-x-hidden">
       <Sidebar />
       <div className="flex-1 min-w-0 lg:pl-64">
         <Header viewMode={viewMode} onViewModeChange={setViewMode} />
@@ -40,10 +40,10 @@ export default function FavoritesPage() {
           {/* Page header */}
           <div className="mb-6">
             <div className="flex items-center gap-3 mb-1">
-              <Heart className="w-5 h-5 text-[#1F8932] fill-[#1F8932]" />
-              <h1 className="text-xl font-bold text-slate-900">Favorites</h1>
+              <Heart className="w-5 h-5 text-[#1F8932] fill-[#1F8932] dark:text-[#5CC061] dark:fill-[#5CC061]" />
+              <h1 className="text-xl font-bold text-slate-900 dark:text-slate-100">Favorites</h1>
             </div>
-            <p className="text-sm text-slate-500">
+            <p className="text-sm text-slate-500 dark:text-slate-400">
               {data?.total ?? 0} saved items
             </p>
           </div>

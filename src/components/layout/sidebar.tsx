@@ -35,9 +35,9 @@ export function Sidebar() {
   };
 
   const sidebarContent = (
-    <aside className="w-64 h-full bg-white border-r border-slate-100 flex flex-col">
+    <aside className="w-64 h-full bg-white dark:bg-slate-900 border-r border-slate-100 dark:border-slate-800 flex flex-col">
       {/* Logo */}
-      <div className="p-5 border-b border-slate-100">
+      <div className="p-5 border-b border-slate-100 dark:border-slate-800">
         <Link href="/dashboard" className="flex items-center gap-3">
           <Image
             src={"/logo-recall.png"}
@@ -48,8 +48,8 @@ export function Sidebar() {
           />
 
           <div>
-            <span className="font-bold text-slate-900 text-lg">Recall</span>
-            <p className="text-xs text-slate-400">Knowledge Manager</p>
+            <span className="font-bold text-slate-900 dark:text-slate-100 text-lg">Recall</span>
+            <p className="text-xs text-slate-400 dark:text-slate-500">Knowledge Manager</p>
           </div>
         </Link>
       </div>
@@ -57,7 +57,7 @@ export function Sidebar() {
       {/* Nav */}
       <nav className="flex-1 p-3 space-y-0.5 overflow-y-auto">
         <div className="mb-4">
-          <p className="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+          <p className="px-3 text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">
             Library
           </p>
           {NAV_ITEMS.map(({ href, icon: Icon, label }) => (
@@ -67,8 +67,8 @@ export function Sidebar() {
               onClick={() => setMobileOpen(false)}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 ${
                 isActive(href)
-                  ? "bg-[#5CC061]/10 text-[#005316] font-semibold"
-                  : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                  ? "bg-[#5CC061]/10 text-[#005316] dark:text-[#5CC061] font-semibold"
+                  : "text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-100"
               }`}
             >
               <Icon className="w-4 h-4 flex-shrink-0" />
@@ -76,8 +76,8 @@ export function Sidebar() {
             </Link>
           ))}
         </div>
-        <div className="pt-3 border-t border-slate-100">
-          <p className="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+        <div className="pt-3 border-t border-slate-100 dark:border-slate-800">
+          <p className="px-3 text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">
             Organize
           </p>
           {BOTTOM_ITEMS.map(({ href, icon: Icon, label }) => (
@@ -87,8 +87,8 @@ export function Sidebar() {
               onClick={() => setMobileOpen(false)}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 ${
                 isActive(href)
-                  ? "bg-[#5CC061]/10 text-[#005316] font-semibold"
-                  : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                  ? "bg-[#5CC061]/10 text-[#005316] dark:text-[#5CC061] font-semibold"
+                  : "text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-100"
               }`}
             >
               <Icon className="w-4 h-4 flex-shrink-0" />
@@ -99,21 +99,21 @@ export function Sidebar() {
       </nav>
 
       {/* User */}
-      <div className="p-3 border-t border-slate-100">
+      <div className="p-3 border-t border-slate-100 dark:border-slate-800">
         <div className="flex items-center gap-3 px-3 py-2 mb-2">
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#5CC061] to-[#1F8932] flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
             {user?.email?.[0]?.toUpperCase() ?? "?"}
           </div>
           <div className="flex-1 min-w-0 hidden sm:block">
-            <p className="text-sm font-medium text-slate-800 truncate">
+            <p className="text-sm font-medium text-slate-800 dark:text-slate-200 truncate">
               {user?.user_metadata?.full_name || user?.email?.split("@")[0]}
             </p>
-            <p className="text-xs text-slate-400 truncate">{user?.email}</p>
+            <p className="text-xs text-slate-400 dark:text-slate-500 truncate">{user?.email}</p>
           </div>
         </div>
         <button
           onClick={() => signOut()}
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-500 hover:bg-red-50 hover:text-red-600 transition-all"
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-500 dark:text-slate-400 hover:bg-red-50 dark:hover:bg-red-950/40 hover:text-red-600 transition-all"
         >
           <LogOut className="w-4 h-4" />
           <span className="hidden sm:inline">Sign out</span>
@@ -132,9 +132,9 @@ export function Sidebar() {
       {/* Mobile hamburger */}
       <button
         onClick={() => setMobileOpen(true)}
-        className="lg:hidden fixed top-2 left-4 z-40 w-10 h-10 bg-white rounded-xl shadow-sm border border-slate-100 flex items-center justify-center"
+        className="lg:hidden fixed top-2 left-4 z-40 w-10 h-10 bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 flex items-center justify-center"
       >
-        <Menu className="w-5 h-5 text-slate-700" />
+        <Menu className="w-5 h-5 text-slate-700 dark:text-slate-300" />
       </button>
 
       {/* Mobile sidebar overlay */}

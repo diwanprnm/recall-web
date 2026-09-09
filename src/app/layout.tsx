@@ -63,7 +63,7 @@ export const viewport: Viewport = {
   maximumScale: 5,
   userScalable: true,
   themeColor: "#667eea",
-  colorScheme: "light",
+  colorScheme: "light dark",
   viewportFit: "cover",
 }
 
@@ -72,8 +72,12 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  const themeInit = `(function(){try{var t=localStorage.getItem("recall-theme");var d=t==="dark"||((t!=="light"&&t!=="dark")&&window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches);if(d)document.documentElement.classList.add("dark")}catch(e){try{if(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches)document.documentElement.classList.add("dark")}catch(e2){}}})()`
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInit }} />
+      </head>
       <body className={inter.className}>
         {children}
         <Toaster />

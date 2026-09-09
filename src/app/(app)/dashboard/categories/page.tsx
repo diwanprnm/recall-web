@@ -67,21 +67,21 @@ function CategoryModal({
         className="absolute inset-0 bg-black/40 backdrop-blur-sm"
         onClick={onClose}
       />
-      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm border">
+      <div className="relative bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-sm border border-slate-100 dark:border-slate-800">
         <div className="flex items-center justify-between p-5 border-b">
-          <h2 className="text-lg font-semibold text-slate-900">
+          <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
             {initial ? "Edit category" : "New category"}
           </h2>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg hover:bg-slate-100 transition"
+            className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition"
           >
-            <X className="w-4 h-4 text-slate-500" />
+            <X className="w-4 h-4 text-slate-500 dark:text-slate-400" />
           </button>
         </div>
         <form onSubmit={handleSubmit} className="p-5 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
               Name
             </label>
             <input
@@ -90,11 +90,11 @@ function CategoryModal({
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Tech, Design, Finance"
               autoFocus
-              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-[#5CC061] focus:bg-white transition text-sm"
+              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-[#5CC061] focus:bg-white dark:focus:bg-slate-900 transition text-sm"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
               Color
             </label>
             <div className="flex gap-2 flex-wrap">
@@ -105,7 +105,7 @@ function CategoryModal({
                   onClick={() => setColor(c)}
                   className={`w-8 h-8 rounded-full border-2 transition ${
                     color === c
-                      ? "border-slate-900 scale-110"
+                      ? "border-slate-900 dark:border-slate-100 scale-110"
                       : "border-transparent hover:scale-105"
                   }`}
                   style={{ backgroundColor: c }}
@@ -156,18 +156,18 @@ function ConfirmDelete({
         className="absolute inset-0 bg-black/40 backdrop-blur-sm"
         onClick={onClose}
       />
-      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm border p-6">
-        <h2 className="text-lg font-semibold text-slate-900 mb-2">
+      <div className="relative bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-sm border border-slate-100 dark:border-slate-800 p-6">
+        <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-2">
           Delete category?
         </h2>
-        <p className="text-sm text-slate-500 mb-5">
+        <p className="text-sm text-slate-500 dark:text-slate-400 mb-5">
           &quot;{name}&quot; will be removed. Items in this category won&apos;t
           be deleted.
         </p>
         <div className="flex gap-3">
           <button
             onClick={onClose}
-            className="flex-1 py-2.5 rounded-xl border border-slate-200 text-sm font-medium text-slate-700 hover:bg-slate-50 transition"
+            className="flex-1 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition"
           >
             Cancel
           </button>
@@ -258,7 +258,7 @@ export default function CategoriesPage() {
   };
 
   return (
-    <div className="flex min-h-screen bg-slate-50 overflow-x-hidden">
+    <div className="flex min-h-screen bg-slate-50 dark:bg-slate-950 overflow-x-hidden">
       <Sidebar />
       <div className="flex-1 min-w-0 lg:pl-64">
         <Header viewMode={viewMode} onViewModeChange={setViewMode} />
@@ -266,8 +266,8 @@ export default function CategoriesPage() {
           {/* Page header */}
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h1 className="text-xl font-bold text-slate-900">Categories</h1>
-              <p className="text-sm text-slate-500 mt-1">
+              <h1 className="text-xl font-bold text-slate-900 dark:text-slate-100">Categories</h1>
+              <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
                 {categories.length} categories
               </p>
             </div>
@@ -289,7 +289,7 @@ export default function CategoriesPage() {
 
           {/* Error */}
           {error && (
-            <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-sm text-red-700 mb-6">
+            <div className="p-4 rounded-xl bg-red-50 dark:bg-red-950/60 border border-red-200 dark:border-red-800 text-sm text-red-700 dark:text-red-400 mb-6">
               <strong>Error:</strong> {error}
             </div>
           )}
@@ -318,7 +318,7 @@ export default function CategoriesPage() {
               {categories.map((cat) => (
                 <div
                   key={cat.id}
-                  className="bg-white rounded-2xl border border-slate-100 p-5 hover:shadow-md transition group"
+                  className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-5 hover:shadow-md transition group"
                 >
                   <Link
                     href={`/dashboard?category=${cat.id}`}
@@ -335,10 +335,10 @@ export default function CategoriesPage() {
                         />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-slate-900 truncate">
+                        <h3 className="font-semibold text-slate-900 dark:text-slate-100 truncate">
                           {cat.name}
                         </h3>
-                        <p className="text-xs text-slate-400">
+                        <p className="text-xs text-slate-400 dark:text-slate-500">
                           {countsById[cat.id] ?? 0} items
                         </p>
                       </div>
@@ -347,13 +347,13 @@ export default function CategoriesPage() {
                   <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition">
                     <button
                       onClick={() => setEditing(cat)}
-                      className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition"
+                      className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition"
                     >
                       <Pencil className="w-3.5 h-3.5" />
                     </button>
                     <button
                       onClick={() => setDeleting(cat)}
-                      className="p-1.5 rounded-lg hover:bg-red-50 text-slate-400 hover:text-red-600 transition"
+                      className="p-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-950/60 text-slate-400 dark:text-slate-500 hover:text-red-600 transition"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>

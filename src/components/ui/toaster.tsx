@@ -23,11 +23,11 @@ const ICON_MAP: Record<NonNullable<ToastOptions["variant"]>, React.ReactNode> = 
   default: null,
 }
 const STYLE_MAP: Record<NonNullable<ToastOptions["variant"]>, string> = {
-  success: "border-emerald-200 bg-emerald-50",
-  error: "border-red-200 bg-red-50",
-  warning: "border-amber-200 bg-amber-50",
-  info: "border-blue-200 bg-blue-50",
-  default: "border-slate-200 bg-white",
+  success: "border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/60",
+  error: "border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950/60",
+  warning: "border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/60",
+  info: "border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/60",
+  default: "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900",
 }
 
 export function Toaster() {
@@ -60,12 +60,12 @@ export function Toaster() {
           >
             {ICON_MAP[variant]}
             <div className="flex-1 min-w-0">
-              {t.title && <p className="text-sm font-semibold text-slate-900">{t.title}</p>}
-              {t.description && <p className="text-xs text-slate-600 mt-0.5">{t.description}</p>}
+              {t.title && <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{t.title}</p>}
+              {t.description && <p className="text-xs text-slate-600 dark:text-slate-300 mt-0.5">{t.description}</p>}
             </div>
             <button
               onClick={() => dismiss(t.id)}
-              className="text-slate-400 hover:text-slate-600 transition"
+              className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition"
             >
               <X className="w-4 h-4" />
             </button>

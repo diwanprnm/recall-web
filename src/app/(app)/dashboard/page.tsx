@@ -64,9 +64,9 @@ function StatCard({
   tint: string;
 }) {
   return (
-    <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-100 flex flex-col gap-3 hover:shadow-md transition-shadow">
+    <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 sm:p-5 border border-slate-100 dark:border-slate-800 flex flex-col gap-3 hover:shadow-md transition-shadow">
       <div className="flex items-center justify-between">
-        <span className="text-2xl sm:text-3xl font-bold text-slate-900 leading-none">
+        <span className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-slate-100 leading-none">
           {value}
         </span>
         <div
@@ -76,8 +76,8 @@ function StatCard({
         </div>
       </div>
       <div>
-        <p className="text-sm font-medium text-slate-700">{label}</p>
-        {sub && <p className="text-xs text-slate-400 mt-0.5">{sub}</p>}
+        <p className="text-sm font-medium text-slate-700 dark:text-slate-300">{label}</p>
+        {sub && <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">{sub}</p>}
       </div>
     </div>
   );
@@ -202,7 +202,7 @@ function DashboardContent() {
   };
 
   return (
-    <div className="flex min-h-screen bg-slate-50 overflow-x-hidden">
+    <div className="flex min-h-screen bg-slate-50 dark:bg-slate-950 overflow-x-hidden">
       <Sidebar />
       <div className="flex-1 min-w-0 lg:pl-64">
         <Header
@@ -260,14 +260,14 @@ function DashboardContent() {
                 value={globalCounts?.total ?? data.total}
                 sub="All saved content"
                 icon={<Archive className="w-5 h-5 text-[#005316]" />}
-                tint="bg-emerald-100"
+                tint="bg-emerald-100 dark:bg-emerald-950/60"
               />
               <StatCard
                 label="Categories"
                 value={categories.length}
                 sub="Active"
-                icon={<FolderOpen className="w-5 h-5 text-[#1F8932]" />}
-                tint="bg-green-100"
+                icon={<FolderOpen className="w-5 h-5 text-[#1F8932] dark:text-[#5CC061]" />}
+                tint="bg-green-100 dark:bg-green-950/60"
               />
               <StatCard
                 label="Platforms"
@@ -278,7 +278,7 @@ function DashboardContent() {
                 }
                 sub="Used"
                 icon={<Tag className="w-5 h-5 text-[#005316]" />}
-                tint="bg-emerald-100"
+                tint="bg-emerald-100 dark:bg-emerald-950/60"
               />
               <StatCard
                 label="This Week"
@@ -293,7 +293,7 @@ function DashboardContent() {
                 }
                 sub="New saves"
                 icon={<Clock className="w-5 h-5 text-[#1F8932]" />}
-                tint="bg-green-100"
+                tint="bg-green-100 dark:bg-green-950/60"
               />
             </div>
           )}
@@ -322,7 +322,7 @@ function DashboardContent() {
 
           {/* Error */}
           {error && (
-            <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-sm text-red-700 mb-6">
+            <div className="p-4 rounded-xl bg-red-50 dark:bg-red-950/60 border border-red-200 dark:border-red-800 text-sm text-red-700 dark:text-red-400 mb-6">
               <strong>Error:</strong> {error}
             </div>
           )}
@@ -499,43 +499,43 @@ function AddItemModal({
         className="absolute inset-0 bg-black/40 backdrop-blur-sm"
         onClick={onClose}
       />
-      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md border">
+      <div className="relative bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-md border border-slate-100 dark:border-slate-800">
         <div className="flex items-center justify-between p-5 border-b">
-          <h2 className="text-lg font-semibold text-slate-900">
+          <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
             Save new content
           </h2>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg hover:bg-slate-100 transition"
+            className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition"
           >
-            <X className="w-4 h-4 text-slate-500" />
+            <X className="w-4 h-4 text-slate-500 dark:text-slate-400" />
           </button>
         </div>
         <form onSubmit={handleSubmit} className="p-5 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
               URL
             </label>
             <div className="relative">
-              <LinkIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <LinkIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 dark:text-slate-500" />
               <input
                 type="url"
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
                 placeholder="https://x.com/user/status/123"
                 required
-                className="w-full pl-11 pr-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-[#5CC061] focus:bg-white transition text-sm"
+                className="w-full pl-11 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-[#5CC061] focus:bg-white dark:focus:bg-slate-900 transition text-sm"
               />
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
               Platform
             </label>
             <select
               value={platform}
               onChange={(e) => setPlatform(e.target.value as Platform)}
-              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-[#5CC061] focus:bg-white transition text-sm"
+              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-[#5CC061] focus:bg-white dark:focus:bg-slate-900 transition text-sm"
             >
               {platforms.map((p) => (
                 <option key={p.value} value={p.value}>
@@ -545,9 +545,9 @@ function AddItemModal({
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
               Category{" "}
-              <span className="text-slate-400 font-normal">(optional)</span>
+              <span className="text-slate-400 dark:text-slate-500 font-normal">(optional)</span>
             </label>
             <Popover
               open={catOpen}
@@ -562,10 +562,10 @@ function AddItemModal({
                   role="combobox"
                   aria-expanded={catOpen}
                   aria-controls="category-popover"
-                  className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-[#5CC061] focus:bg-white transition text-sm text-left"
+                  className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-[#5CC061] focus:bg-white dark:focus:bg-slate-900 transition text-sm text-left"
                 >
                   <span
-                    className={categoryId ? "text-slate-900" : "text-slate-400"}
+                    className={categoryId ? "text-slate-900 dark:text-slate-100" : "text-slate-400 dark:text-slate-500"}
                   >
                     {(() => {
                       if (!categoryId) return "No category";
@@ -573,7 +573,7 @@ function AddItemModal({
                       return c ? c.name : categoryId;
                     })()}
                   </span>
-                  <ChevronsUpDown className="w-4 h-4 text-slate-400 shrink-0" />
+                  <ChevronsUpDown className="w-4 h-4 text-slate-400 dark:text-slate-500 shrink-0" />
                 </button>
               </PopoverTrigger>
               <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0">
@@ -656,7 +656,7 @@ function AddItemModal({
             </Popover>
           </div>
           {error && (
-            <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-sm text-red-700">
+            <div className="p-3 rounded-lg bg-red-50 dark:bg-red-950/60 border border-red-200 dark:border-red-800 text-sm text-red-700 dark:text-red-400">
               {error}
             </div>
           )}
@@ -728,19 +728,19 @@ function EditItemModal({
         className="absolute inset-0 bg-black/40 backdrop-blur-sm"
         onClick={onClose}
       />
-      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm border">
+      <div className="relative bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-sm border border-slate-100 dark:border-slate-800">
         {confirmingDelete ? (
           /* ── Destructive confirmation step ── */
           <div className="p-6">
             <div className="flex items-start gap-3 mb-4">
-              <div className="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center flex-shrink-0">
-                <AlertTriangle className="w-5 h-5 text-red-600" />
+              <div className="w-10 h-10 rounded-xl bg-red-50 dark:bg-red-950/60 flex items-center justify-center flex-shrink-0">
+                <AlertTriangle className="w-5 h-5 text-red-600 dark:text-red-400" />
               </div>
               <div className="flex-1 min-w-0">
-                <h2 className="text-lg font-semibold text-slate-900">
+                <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
                   Delete this item?
                 </h2>
-                <p className="text-sm text-slate-500 mt-1">
+                <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
                   &quot;{item.title || item.url}&quot; will be permanently
                   deleted. This action cannot be undone.
                 </p>
@@ -751,7 +751,7 @@ function EditItemModal({
                 type="button"
                 onClick={() => setConfirmingDelete(false)}
                 disabled={deleting}
-                className="flex-1 py-2.5 rounded-xl border border-slate-200 text-sm font-medium text-slate-700 hover:bg-slate-50 transition disabled:opacity-50"
+                className="flex-1 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition disabled:opacity-50"
               >
                 Cancel
               </button>
@@ -773,30 +773,30 @@ function EditItemModal({
         ) : (
           <>
             <div className="flex items-center justify-between p-5 border-b">
-              <h2 className="text-lg font-semibold text-slate-900">
+              <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
                 Edit item
               </h2>
               <button
                 onClick={onClose}
-                className="p-1.5 rounded-lg hover:bg-slate-100 transition"
+                className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition"
               >
-                <X className="w-4 h-4 text-slate-500" />
+                <X className="w-4 h-4 text-slate-500 dark:text-slate-400" />
               </button>
             </div>
             <form onSubmit={handleSubmit} className="p-5 space-y-4">
               <div>
-                <p className="text-sm text-slate-500 mb-1 truncate">
+                <p className="text-sm text-slate-500 dark:text-slate-400 mb-1 truncate">
                   {item.title || item.url}
                 </p>
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
                   Category
                 </label>
                 <select
                   value={categoryId}
                   onChange={(e) => setCategoryId(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-[#5CC061] focus:bg-white transition text-sm"
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-[#5CC061] focus:bg-white dark:focus:bg-slate-900 transition text-sm"
                 >
                   <option value="">No category</option>
                   {categories.map((c) => (
@@ -817,7 +817,7 @@ function EditItemModal({
               <button
                 type="button"
                 onClick={() => setConfirmingDelete(true)}
-                className="w-full py-2.5 rounded-xl border border-red-200 text-red-600 text-sm font-medium hover:bg-red-50 transition flex items-center justify-center gap-2"
+                className="w-full py-2.5 rounded-xl border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 text-sm font-medium hover:bg-red-50 dark:hover:bg-red-950/60 transition flex items-center justify-center gap-2"
               >
                 <Trash2 className="w-4 h-4" />
                 Delete permanently

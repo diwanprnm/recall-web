@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   /* Default Tailwind palette (v4 uses these variables) */
   --color-slate-50: #f8fafc;
@@ -112,6 +114,24 @@
   --radius: 0.75rem;
   --font-sans: var(--font-inter, system-ui), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
+
+/* ── Dark mode token overrides (theme toggle) ────────────────────────────── */
+.dark {
+  --color-background: #0f172a;
+  --color-foreground: #f1f5f9;
+  --color-card: #1e293b;
+  --color-card-foreground: #f1f5f9;
+  --color-muted: #1e293b;
+  --color-muted-foreground: #94a3b8;
+  --color-border: #334155;
+  --color-input: #334155;
+  --color-popover: #1e293b;
+  --color-popover-foreground: #f1f5f9;
+}
+
+.dark * { border-color: var(--color-border); }
+
+.dark ::-webkit-scrollbar-thumb { background: var(--color-slate-700); }
 
 @layer base {
   * {

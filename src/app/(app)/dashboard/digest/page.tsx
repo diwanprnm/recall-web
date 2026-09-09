@@ -106,7 +106,7 @@ export default function DigestPage() {
   };
 
   return (
-    <div className="flex min-h-screen bg-slate-50 overflow-x-hidden">
+    <div className="flex min-h-screen bg-slate-50 dark:bg-slate-950 overflow-x-hidden">
       <Sidebar />
       <div className="flex-1 min-w-0 lg:pl-64">
         <Header viewMode={viewMode} onViewModeChange={setViewMode} />
@@ -114,23 +114,23 @@ export default function DigestPage() {
           {/* Page header */}
           <div className="mb-6">
             <div className="flex items-center gap-3 mb-1">
-              <Sparkles className="w-5 h-5 text-[#1F8932]" />
-              <h1 className="text-xl font-bold text-slate-900">Daily Digest</h1>
+              <Sparkles className="w-5 h-5 text-[#1F8932] dark:text-[#5CC061]" />
+              <h1 className="text-xl font-bold text-slate-900 dark:text-slate-100">Daily Digest</h1>
             </div>
-            <p className="text-sm text-slate-500">
+            <p className="text-sm text-slate-500 dark:text-slate-400">
               Get personalized recommendations from your saved content.
             </p>
           </div>
 
           {/* Settings card */}
-          <div className="bg-white rounded-2xl border border-slate-100 p-5 mb-6">
-            <h2 className="text-sm font-semibold text-slate-900 mb-4 flex items-center gap-2">
-              <Clock className="w-4 h-4 text-slate-400" />
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-5 mb-6">
+            <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-100 mb-4 flex items-center gap-2">
+              <Clock className="w-4 h-4 text-slate-400 dark:text-slate-500" />
               Digest Settings
             </h2>
 
             {settingsLoading ? (
-              <div className="flex items-center gap-2 text-sm text-slate-500">
+              <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
                 <Loader2 className="w-4 h-4 animate-spin" />
                 Loading settings...
               </div>
@@ -140,15 +140,15 @@ export default function DigestPage() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     {enabled ? (
-                      <Mail className="w-4 h-4 text-green-600" />
+                      <Mail className="w-4 h-4 text-green-600 dark:text-green-400" />
                     ) : (
-                      <MailX className="w-4 h-4 text-slate-400" />
+                      <MailX className="w-4 h-4 text-slate-400 dark:text-slate-500" />
                     )}
                     <div>
-                      <p className="text-sm font-medium text-slate-700">
+                      <p className="text-sm font-medium text-slate-700 dark:text-slate-300">
                         Enable digest
                       </p>
-                      <p className="text-xs text-slate-400">
+                      <p className="text-xs text-slate-400 dark:text-slate-500">
                         Receive resurfaced content recommendations
                       </p>
                     </div>
@@ -157,7 +157,7 @@ export default function DigestPage() {
                     onClick={() => saveSettings({ enabled: !enabled })}
                     disabled={settingsSaving}
                     className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                      enabled ? "bg-green-500" : "bg-slate-200"
+                      enabled ? "bg-green-500" : "bg-slate-200 dark:bg-slate-700"
                     }`}
                   >
                     <span
@@ -172,12 +172,12 @@ export default function DigestPage() {
                 {enabled && (
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <Clock className="w-4 h-4 text-slate-400" />
+                      <Clock className="w-4 h-4 text-slate-400 dark:text-slate-500" />
                       <div>
-                        <p className="text-sm font-medium text-slate-700">
+                        <p className="text-sm font-medium text-slate-700 dark:text-slate-300">
                           Frequency
                         </p>
-                        <p className="text-xs text-slate-400">
+                        <p className="text-xs text-slate-400 dark:text-slate-500">
                           How often to generate recommendations
                         </p>
                       </div>
@@ -190,7 +190,7 @@ export default function DigestPage() {
                         })
                       }
                       disabled={settingsSaving}
-                      className="px-3 py-1.5 rounded-lg border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-[#5CC061]"
+                      className="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#5CC061]"
                     >
                       {FREQUENCY_OPTIONS.map((opt) => (
                         <option key={opt.value} value={opt.value}>
@@ -254,13 +254,13 @@ export default function DigestPage() {
           {/* Initial state */}
           {!generated && items.length === 0 && !generating && (
             <div className="text-center py-16">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-emerald-100 to-green-100 flex items-center justify-center">
-                <Sparkles className="w-8 h-8 text-[#1F8932]" />
+              <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-emerald-100 to-green-100 dark:from-emerald-950 dark:to-green-950 flex items-center justify-center">
+                <Sparkles className="w-8 h-8 text-[#1F8932] dark:text-[#5CC061]" />
               </div>
-              <h3 className="text-lg font-semibold text-slate-900 mb-2">
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-2">
                 Ready to rediscover?
               </h3>
-              <p className="text-sm text-slate-500 max-w-sm mx-auto">
+              <p className="text-sm text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
                 Click &quot;Generate Digest&quot; to get AI-powered
                 recommendations from your saved content.
               </p>

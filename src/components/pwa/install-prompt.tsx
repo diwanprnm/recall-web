@@ -73,10 +73,10 @@ export function PWAInstallButton() {
 
   if (showIOSHint) {
     return (
-      <div className="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-4 sm:w-80 bg-white rounded-2xl shadow-xl border border-slate-100 p-4 z-40 animate-fade-in">
+      <div className="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-4 sm:w-80 bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-800 p-4 z-40 animate-fade-in">
         <button
           onClick={() => setShowIOSHint(false)}
-          className="absolute top-2 right-2 text-slate-400 hover:text-slate-600"
+          className="absolute top-2 right-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
         >
           <X className="w-4 h-4" />
         </button>
@@ -85,8 +85,8 @@ export function PWAInstallButton() {
             <Download className="w-5 h-5 text-white" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-slate-900">Install Recall</p>
-            <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+            <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">Install Recall</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
               Tap{" "}
               <Share className="inline w-3.5 h-3.5 mb-0.5" />
               {" "}then{" "}

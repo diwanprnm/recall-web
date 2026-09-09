@@ -80,11 +80,11 @@ function PlatformIcon({ platform, size = "w-3.5 h-3.5" }: { platform: string; si
 function QualityBadge({ score }: { score: number | null }) {
   if (!score) return null
   const colors: Record<number, string> = {
-    5: "bg-emerald-100 text-emerald-700",
-    4: "bg-green-100 text-green-700",
-    3: "bg-slate-100 text-slate-600",
-    2: "bg-amber-100 text-amber-700",
-    1: "bg-red-100 text-red-700",
+    5: "bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400",
+    4: "bg-green-100 dark:bg-green-950/60 text-green-700 dark:text-green-400",
+    3: "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400",
+    2: "bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400",
+    1: "bg-red-100 dark:bg-red-950/60 text-red-700 dark:text-red-400",
   }
   return (
     <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold ${colors[score] ?? colors[3]}`}>
@@ -103,7 +103,7 @@ export function ItemCard({ item, viewMode, onFavorite, onArchive, onEdit, onClic
     return (
       <div
         onClick={() => onClick?.(item)}
-        className="item-card group flex items-stretch gap-2.5 sm:gap-4 p-2.5 sm:p-4 bg-white rounded-xl border border-slate-100 hover:border-slate-200 hover:shadow-md cursor-pointer animate-fade-in"
+        className="item-card group flex items-stretch gap-2.5 sm:gap-4 p-2.5 sm:p-4 bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 hover:border-slate-200 dark:hover:border-slate-700 hover:shadow-md cursor-pointer animate-fade-in"
       >
         {/* Thumbnail / Platform icon */}
         <div className="w-16 h-16 sm:w-24 sm:h-24 rounded-xl overflow-hidden flex-shrink-0 relative">
@@ -116,7 +116,7 @@ export function ItemCard({ item, viewMode, onFavorite, onArchive, onEdit, onClic
             </div>
           )}
           {/* Platform badge */}
-          <span className={`absolute top-1.5 left-1.5 platform-badge text-[10px] bg-white/90 border border-white/60 ${meta.color}`}>
+          <span className={`absolute top-1.5 left-1.5 platform-badge text-[10px] bg-white/90 dark:bg-slate-900/90 border border-white/60 dark:border-slate-700 ${meta.color}`}>
             <PlatformIcon platform={item.platform} size="w-3 h-3" />
             {meta.label}
           </span>
@@ -125,46 +125,46 @@ export function ItemCard({ item, viewMode, onFavorite, onArchive, onEdit, onClic
         {/* Content */}
         <div className="flex-1 min-w-0 flex flex-col justify-center py-0.5">
           <div className="flex items-center gap-2 mb-1">
-            <h3 className="font-semibold text-sm text-slate-900 truncate">
+            <h3 className="font-semibold text-sm text-slate-900 dark:text-slate-100 truncate">
               {item.title || "Untitled"}
             </h3>
             <QualityBadge score={item.quality_score} />
           </div>
-          <p className="text-xs text-slate-500 line-clamp-1">{item.summary || item.text?.slice(0, 100) || ""}</p>
+          <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-1">{item.summary || item.text?.slice(0, 100) || ""}</p>
           <div className="flex items-center gap-3 mt-1.5">
             {item.tags.slice(0, 3).map((tag) => (
-              <span key={tag} className="text-[11px] text-slate-400">#{tag}</span>
+              <span key={tag} className="text-[11px] text-slate-400 dark:text-slate-500">#{tag}</span>
             ))}
             {item.tags.length > 3 && (
-              <span className="text-[11px] text-slate-400">+{item.tags.length - 3}</span>
+              <span className="text-[11px] text-slate-400 dark:text-slate-500">+{item.tags.length - 3}</span>
             )}
           </div>
         </div>
 
         {/* Meta */}
         <div className="flex flex-col items-end justify-between flex-shrink-0 self-stretch py-0.5 min-w-0">
-          <span className="text-[11px] sm:text-xs text-slate-400 whitespace-nowrap">{timeAgo}</span>
+          <span className="text-[11px] sm:text-xs text-slate-400 dark:text-slate-500 whitespace-nowrap">{timeAgo}</span>
           <div className="flex items-center gap-0.5 sm:gap-1.5">
             <button
               type="button"
               onClick={(e) => { e.stopPropagation(); onFavorite?.(item) }}
-              className="p-1 sm:p-1.5 rounded-lg hover:bg-slate-100 hover:scale-110 transition"
+              className="p-1 sm:p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 hover:scale-110 transition"
             >
-              <Heart className={`w-4 h-4 ${item.is_favorite ? "fill-red-500 text-red-500" : "text-slate-300"}`} />
+              <Heart className={`w-4 h-4 ${item.is_favorite ? "fill-red-500 text-red-500" : "text-slate-300 dark:text-slate-600"}`} />
             </button>
             <button
               type="button"
               onClick={(e) => { e.stopPropagation(); onArchive?.(item) }}
-              className="p-1 sm:p-1.5 rounded-lg hover:bg-slate-100 hover:scale-110 transition"
+              className="p-1 sm:p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 hover:scale-110 transition"
             >
-              <Archive className={`w-4 h-4 ${item.is_archived ? "fill-slate-500 text-slate-500" : "text-slate-300"}`} />
+              <Archive className={`w-4 h-4 ${item.is_archived ? "fill-slate-500 text-slate-500" : "text-slate-300 dark:text-slate-600"}`} />
             </button>
             <a
               href={item.url}
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
-              className="p-1 sm:p-1.5 rounded-lg hover:bg-slate-100 transition opacity-0 group-hover:opacity-100"
+              className="p-1 sm:p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition opacity-0 group-hover:opacity-100"
             >
               <ExternalLink className="w-4 h-4" />
             </a>
@@ -178,7 +178,7 @@ export function ItemCard({ item, viewMode, onFavorite, onArchive, onEdit, onClic
   return (
     <div
       onClick={() => onClick?.(item)}
-      className="item-card bg-white rounded-2xl border border-slate-100 overflow-hidden hover:border-slate-200 hover:shadow-lg cursor-pointer animate-fade-in"
+      className="item-card bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 overflow-hidden hover:border-slate-200 dark:hover:border-slate-700 hover:shadow-lg cursor-pointer animate-fade-in"
     >
       {/* Thumbnail / Platform header */}
       <div className={`h-44 sm:h-48 relative ${meta.bg} flex items-center justify-center overflow-hidden`}>
@@ -186,13 +186,13 @@ export function ItemCard({ item, viewMode, onFavorite, onArchive, onEdit, onClic
           // eslint-disable-next-line @next/next/no-img-element
           <img src={item.thumbnail_url} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
         ) : (
-          <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-white/60">
+          <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-white/60 dark:bg-slate-800/60">
             <PlatformIcon platform={item.platform} size="w-10 h-10" />
           </div>
         )}
 
         {/* Platform badge */}
-        <span className={`absolute top-3 left-3 platform-badge text-[10px] ${meta.bg} ${meta.color} bg-white border border-white/50`}>
+        <span className={`absolute top-3 left-3 platform-badge text-[10px] ${meta.bg} ${meta.color} bg-white dark:bg-slate-900 border border-white/50 dark:border-slate-700`}>
           <PlatformIcon platform={item.platform} size="w-3 h-3" />
           {meta.label}
         </span>
@@ -202,30 +202,30 @@ export function ItemCard({ item, viewMode, onFavorite, onArchive, onEdit, onClic
           <button
             type="button"
             onClick={(e) => { e.stopPropagation(); onFavorite?.(item) }}
-            className="w-8 h-8 rounded-full bg-white/95 shadow-sm flex items-center justify-center hover:bg-white hover:scale-110 transition"
+            className="w-8 h-8 rounded-full bg-white/95 dark:bg-slate-900/95 shadow-sm flex items-center justify-center hover:bg-white dark:hover:bg-slate-800 hover:scale-110 transition"
           >
-            <Heart className={`w-4 h-4 ${item.is_favorite ? "fill-red-500 text-red-500" : "text-slate-400"}`} />
+            <Heart className={`w-4 h-4 ${item.is_favorite ? "fill-red-500 text-red-500" : "text-slate-400 dark:text-slate-500"}`} />
           </button>
           <button
             type="button"
             onClick={(e) => { e.stopPropagation(); onEdit?.(item) }}
-            className="w-8 h-8 rounded-full bg-white/95 shadow-sm flex items-center justify-center hover:bg-white hover:scale-110 transition"
+            className="w-8 h-8 rounded-full bg-white/95 dark:bg-slate-900/95 shadow-sm flex items-center justify-center hover:bg-white dark:hover:bg-slate-800 hover:scale-110 transition"
           >
-            <Pencil className="w-4 h-4 text-slate-400" />
+            <Pencil className="w-4 h-4 text-slate-400 dark:text-slate-500" />
           </button>
           <button
             type="button"
             onClick={(e) => { e.stopPropagation(); onArchive?.(item) }}
-            className="w-8 h-8 rounded-full bg-white/95 shadow-sm flex items-center justify-center hover:bg-white hover:scale-110 transition"
+            className="w-8 h-8 rounded-full bg-white/95 dark:bg-slate-900/95 shadow-sm flex items-center justify-center hover:bg-white dark:hover:bg-slate-800 hover:scale-110 transition"
           >
-            <Archive className={`w-4 h-4 ${item.is_archived ? "fill-slate-500 text-slate-500" : "text-slate-400"}`} />
+            <Archive className={`w-4 h-4 ${item.is_archived ? "fill-slate-500 text-slate-500" : "text-slate-400 dark:text-slate-500"}`} />
           </button>
         </div>
 
         {/* AI badge if analysed */}
         {item.summary && (
           <div className="absolute bottom-3 left-3 right-3">
-            <div className="bg-white/90 backdrop-blur-sm rounded-lg px-2 py-1.5 text-[10px] text-slate-600 flex items-center gap-1">
+            <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm rounded-lg px-2 py-1.5 text-[10px] text-slate-600 dark:text-slate-300 flex items-center gap-1">
               <svg className="w-3 h-3 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
@@ -239,42 +239,42 @@ export function ItemCard({ item, viewMode, onFavorite, onArchive, onEdit, onClic
       <div className="p-4">
         <div className="flex items-center gap-2 mb-2">
           {item.author && (
-            <div className="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-[10px] font-bold text-slate-600 flex-shrink-0">
+            <div className="w-6 h-6 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-[10px] font-bold text-slate-600 dark:text-slate-300 flex-shrink-0">
               {item.author[0]}
             </div>
           )}
           <div className="min-w-0">
             {item.author && (
-              <p className="text-[11px] text-slate-500 truncate">{item.author}</p>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">{item.author}</p>
             )}
           </div>
           <QualityBadge score={item.quality_score} />
         </div>
 
-        <h3 className="font-semibold text-sm text-slate-900 mb-1.5 line-clamp-2 leading-snug">
+        <h3 className="font-semibold text-sm text-slate-900 dark:text-slate-100 mb-1.5 line-clamp-2 leading-snug">
           {item.title || "Untitled"}
         </h3>
 
         {item.summary && (
-          <p className="text-xs text-slate-500 line-clamp-2 mb-3">{item.summary}</p>
+          <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 mb-3">{item.summary}</p>
         )}
 
         {/* Tags */}
         {item.tags.length > 0 && (
           <div className="flex flex-wrap gap-1 mb-3">
             {item.tags.slice(0, 3).map((tag) => (
-              <span key={tag} className="tag-pill bg-slate-100 text-slate-600">
+              <span key={tag} className="tag-pill bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
                 #{tag}
               </span>
             ))}
             {item.tags.length > 3 && (
-              <span className="tag-pill bg-slate-100 text-slate-400">+{item.tags.length - 3}</span>
+              <span className="tag-pill bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500">+{item.tags.length - 3}</span>
             )}
           </div>
         )}
 
         {/* Footer */}
-        <div className="flex items-center justify-between text-[11px] text-slate-400">
+        <div className="flex items-center justify-between text-[11px] text-slate-400 dark:text-slate-500">
           <span>{timeAgo}</span>
           <div className="flex items-center gap-2">
             {item.platform === "twitter" && item.author_handle && (

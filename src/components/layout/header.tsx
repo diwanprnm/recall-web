@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { useRouter } from "next/navigation";
 import { Bell, Plus, Grid2x2, List, Search as SearchIcon, X } from "lucide-react";
+import { ThemeToggle } from "@/components/theme/theme-toggle";
 
 interface HeaderProps {
   viewMode: "grid" | "list";
@@ -50,17 +51,17 @@ export function Header({
   }
 
   return (
-    <header className={`relative h-14 sm:h-16 w-full min-w-0 sticky top-0 bg-white/95 backdrop-blur-lg border-b border-slate-200 flex items-center gap-2 sm:gap-3 pl-14 sm:pl-6 pr-3 sm:pr-6 ${mobileSearchOpen ? "z-40" : "z-20"}`}>
+    <header className={`relative h-14 sm:h-16 w-full min-w-0 sticky top-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-lg border-b border-slate-200 dark:border-slate-800 flex items-center gap-2 sm:gap-3 pl-14 sm:pl-6 pr-3 sm:pr-6 ${mobileSearchOpen ? "z-40" : "z-20"}`}>
       {/* ── Desktop search (full input, sm and up) ── */}
       <form onSubmit={handleSearch} className="hidden sm:block flex-1 max-w-xl relative">
         <div className="relative">
-          <SearchIcon className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-slate-400" />
+          <SearchIcon className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-slate-400 dark:text-slate-500" />
           <input
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search..."
-            className="w-full bg-slate-100 border-2 border-transparent rounded-xl sm:rounded-2xl pl-10 sm:pl-12 pr-3 sm:pr-4 py-2 sm:py-2.5 text-sm focus:outline-none search-glow focus:border-[#5CC061] focus:bg-white transition"
+            className="w-full bg-slate-100 dark:bg-slate-800 border-2 border-transparent rounded-xl sm:rounded-2xl pl-10 sm:pl-12 pr-3 sm:pr-4 py-2 sm:py-2.5 text-sm focus:outline-none search-glow focus:border-[#5CC061] focus:bg-white dark:focus:bg-slate-900 transition"
           />
         </div>
       </form>
@@ -68,14 +69,14 @@ export function Header({
       {/* ── Actions Container ── */}
       <div className="flex items-center gap-1.5 sm:gap-5 ml-auto">
         {/* View Mode toggle (sm and up) */}
-        <div className="hidden sm:flex bg-slate-100 rounded-lg p-0.5">
+        <div className="hidden sm:flex bg-slate-100 dark:bg-slate-800 rounded-lg p-0.5">
           <button
             type="button"
             onClick={() => onViewModeChange("grid")}
             className={`p-2 rounded-md transition ${
               viewMode === "grid"
-                ? "bg-white shadow-sm text-slate-900"
-                : "text-slate-400 hover:text-slate-600"
+                ? "bg-white dark:bg-slate-700 shadow-sm text-slate-900 dark:text-slate-100"
+                : "text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300"
             }`}
             title="Grid view"
           >
@@ -86,8 +87,8 @@ export function Header({
             onClick={() => onViewModeChange("list")}
             className={`p-2 rounded-md transition ${
               viewMode === "list"
-                ? "bg-white shadow-sm text-slate-900"
-                : "text-slate-400 hover:text-slate-600"
+                ? "bg-white dark:bg-slate-700 shadow-sm text-slate-900 dark:text-slate-100"
+                : "text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300"
             }`}
             title="List view"
           >
@@ -99,11 +100,14 @@ export function Header({
         <button
           type="button"
           onClick={() => setMobileSearchOpen(true)}
-          className="sm:hidden w-10 h-10 rounded-xl hover:bg-slate-100 text-slate-500 transition flex items-center justify-center"
+          className="sm:hidden w-10 h-10 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 transition flex items-center justify-center"
           aria-label="Search"
         >
           <SearchIcon className="w-5 h-5" />
         </button>
+
+        {/* Theme toggle (every page, all viewports) */}
+        <ThemeToggle />
 
         {/* Save button — icon-only on mobile, with label on sm+ */}
         <button
@@ -118,7 +122,7 @@ export function Header({
         {/* Notifications (sm and up) */}
         <button
           type="button"
-          className="relative p-2 rounded-xl hover:bg-slate-100 text-slate-500 transition hidden sm:flex"
+          className="relative p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 transition hidden sm:flex"
         >
           <Bell className="w-4 h-4" />
           <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-red-500 rounded-full text-[10px] text-white font-bold flex items-center justify-center">
@@ -134,8 +138,8 @@ export function Header({
 
       {/* ── Mobile search overlay (expands from the icon) ── */}
       {mobileSearchOpen && (
-        <div className="sm:hidden absolute inset-0 bg-white/95 backdrop-blur-lg flex items-center px-3 gap-2">
-          <SearchIcon className="w-4 h-4 text-slate-400 flex-shrink-0" />
+        <div className="sm:hidden absolute inset-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-lg flex items-center px-3 gap-2">
+          <SearchIcon className="w-4 h-4 text-slate-400 dark:text-slate-500 flex-shrink-0" />
           <form onSubmit={handleSearch} className="flex-1">
             <input
               ref={mobileInputRef}
@@ -152,7 +156,7 @@ export function Header({
               setMobileSearchOpen(false);
               setQuery("");
             }}
-            className="p-2 rounded-xl hover:bg-slate-100 text-slate-500 transition flex-shrink-0"
+            className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 transition flex-shrink-0"
             aria-label="Close search"
           >
             <X className="w-5 h-5" />

@@ -40,21 +40,21 @@ function SearchContent() {
   ]
 
   return (
-    <div className="flex min-h-screen bg-slate-50 overflow-x-hidden">
+    <div className="flex min-h-screen bg-slate-50 dark:bg-slate-950 overflow-x-hidden">
       <Sidebar />
       <div className="flex-1 min-w-0 lg:pl-64">
         <Header viewMode="grid" onViewModeChange={() => {}} />
       {/* Search bar */}
-      <form onSubmit={handleSearch} className="sticky top-0 z-20 bg-white border-b px-6 py-4">
+      <form onSubmit={handleSearch} className="sticky top-0 z-20 bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 px-6 py-4">
         <div className="max-w-3xl mx-auto flex gap-3">
           <div className="relative flex-1">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 dark:text-slate-500" />
             <input
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Ask anything — 'things about AI coding assistants' or 'marketing strategies for B2B SaaS'..."
-              className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-[#5CC061] focus:bg-white transition search-input"
+              className="w-full pl-12 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-[#5CC061] focus:bg-white dark:focus:bg-slate-900 transition search-input"
             />
             {loading && <Loader2 className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 animate-spin text-[#5CC061]" />}
           </div>
@@ -71,7 +71,7 @@ function SearchContent() {
         {/* Example queries */}
         {query === "" && (
           <div className="max-w-3xl mx-auto mt-3 flex flex-wrap gap-2">
-            <span className="text-xs text-slate-400">Try:</span>
+            <span className="text-xs text-slate-400 dark:text-slate-500">Try:</span>
             {exampleQueries.map((q) => (
               <button
                 key={q}
@@ -79,7 +79,7 @@ function SearchContent() {
                   setQuery(q)
                   search(q)
                 }}
-                className="text-xs text-[#1F8932] bg-[#5CC061]/10 hover:bg-[#5CC061]/20 px-2.5 py-1 rounded-full transition"
+                className="text-xs text-[#1F8932] dark:text-[#5CC061] bg-[#5CC061]/10 hover:bg-[#5CC061]/20 px-2.5 py-1 rounded-full transition"
               >
                 {q}
               </button>
@@ -93,12 +93,12 @@ function SearchContent() {
         {/* Meta */}
         {results && (
           <div className="mb-4 flex items-center gap-3">
-            <p className="text-sm text-slate-500">
-              Found <strong className="text-slate-800">{results.total}</strong> results for{" "}
+            <p className="text-sm text-slate-500 dark:text-slate-400">
+              Found <strong className="text-slate-800 dark:text-slate-200">{results.total}</strong> results for{" "}
               <em>&ldquo;{results.query}&rdquo;</em>
             </p>
-            <span className="text-xs text-slate-400">{Math.round(results.took_ms)}ms</span>
-            <button onClick={clear} className="text-xs text-[#1F8932] hover:underline ml-auto">
+            <span className="text-xs text-slate-400 dark:text-slate-500">{Math.round(results.took_ms)}ms</span>
+            <button onClick={clear} className="text-xs text-[#1F8932] dark:text-[#5CC061] hover:underline ml-auto">
               Clear
             </button>
           </div>
@@ -111,14 +111,14 @@ function SearchContent() {
               <div className="w-12 h-12 rounded-2xl gradient-hero flex items-center justify-center mx-auto mb-4 animate-pulse">
                 <Search className="w-6 h-6 text-white" />
               </div>
-              <p className="text-sm text-slate-500">Searching your knowledge base...</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">Searching your knowledge base...</p>
             </div>
           </div>
         )}
 
         {/* Error */}
         {error && (
-          <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-sm text-red-700 mb-4">
+          <div className="p-4 rounded-xl bg-red-50 dark:bg-red-950/60 border border-red-200 dark:border-red-800 text-sm text-red-700 dark:text-red-400 mb-4">
             <strong>Error:</strong> {error}
           </div>
         )}
@@ -135,7 +135,7 @@ function SearchContent() {
                 />
                 {/* Similarity badge */}
                 <div className="absolute top-4 right-4">
-                  <span className="text-xs font-mono text-slate-400">
+                  <span className="text-xs font-mono text-slate-400 dark:text-slate-500">
                     {Math.round(similarity * 100)}% match
                   </span>
                 </div>
