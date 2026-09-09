@@ -7,6 +7,7 @@ import { Sidebar } from "@/components/layout/sidebar"
 import { Header } from "@/components/layout/header"
 import { ItemCard } from "@/components/items/item-card"
 import { EmptyState } from "@/components/ui/empty-state"
+import { SkeletonList } from "@/components/ui/skeleton-card"
 import { Search, Loader2, Zap } from "lucide-react"
 import { useSearchParams } from "next/navigation"
 
@@ -105,16 +106,7 @@ function SearchContent() {
         )}
 
         {/* Loading */}
-        {loading && (
-          <div className="flex items-center justify-center py-20">
-            <div className="text-center">
-              <div className="w-12 h-12 rounded-2xl gradient-hero flex items-center justify-center mx-auto mb-4 animate-pulse">
-                <Search className="w-6 h-6 text-white" />
-              </div>
-              <p className="text-sm text-slate-500 dark:text-slate-400">Searching your knowledge base...</p>
-            </div>
-          </div>
-        )}
+        {loading && <SkeletonList rows={6} viewMode="list" />}
 
         {/* Error */}
         {error && (
@@ -167,11 +159,7 @@ function SearchContent() {
 
 export default function SearchPage() {
   return (
-    <Suspense fallback={
-      <div className="flex-1 flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-[#5CC061]" />
-      </div>
-    }>
+    <Suspense fallback={<SkeletonList rows={6} viewMode="list" />}>
       <SearchContent />
     </Suspense>
   )

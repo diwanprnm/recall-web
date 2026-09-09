@@ -7,9 +7,10 @@ import { Sidebar } from "@/components/layout/sidebar";
 import { Header } from "@/components/layout/header";
 import { ItemCard } from "@/components/items/item-card";
 import { EmptyState } from "@/components/ui/empty-state";
+import { SkeletonList } from "@/components/ui/skeleton-card";
 import { toast } from "@/components/ui/toaster";
 import { type Item } from "@/types";
-import { Loader2, Heart } from "lucide-react";
+import { Heart } from "lucide-react";
 
 export default function FavoritesPage() {
   const { user, getJwt } = useAuth();
@@ -49,11 +50,7 @@ export default function FavoritesPage() {
           </div>
 
           {/* Loading */}
-          {loading && (
-            <div className="flex items-center justify-center py-20">
-              <Loader2 className="w-8 h-8 animate-spin text-[#5CC061]" />
-            </div>
-          )}
+          {loading && <SkeletonList rows={6} viewMode="grid" />}
 
           {/* Error */}
           {error && (

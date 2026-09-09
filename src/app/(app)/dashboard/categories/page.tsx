@@ -6,6 +6,7 @@ import { useItems } from "@/hooks/use-items";
 import { Sidebar } from "@/components/layout/sidebar";
 import { Header } from "@/components/layout/header";
 import { EmptyState } from "@/components/ui/empty-state";
+import { SkeletonList } from "@/components/ui/skeleton-card";
 import { toast } from "@/components/ui/toaster";
 import {
   listCategories,
@@ -281,11 +282,7 @@ export default function CategoriesPage() {
           </div>
 
           {/* Loading */}
-          {loading && (
-            <div className="flex items-center justify-center py-20">
-              <Loader2 className="w-8 h-8 animate-spin text-[#5CC061]" />
-            </div>
-          )}
+          {loading && <SkeletonList rows={6} viewMode={viewMode} />}
 
           {/* Error */}
           {error && (

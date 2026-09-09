@@ -6,6 +6,7 @@ import { Sidebar } from "@/components/layout/sidebar";
 import { Header } from "@/components/layout/header";
 import { ItemCard } from "@/components/items/item-card";
 import { EmptyState } from "@/components/ui/empty-state";
+import { SkeletonList } from "@/components/ui/skeleton-card";
 import { toast } from "@/components/ui/toaster";
 import {
   getDigestSettings,
@@ -231,6 +232,8 @@ export default function DigestPage() {
               description="Try saving more content — the digest surfaces items you haven't engaged with recently."
             />
           )}
+
+          {generating && <SkeletonList rows={6} viewMode={viewMode} />}
 
           {items.length > 0 && (
             <div

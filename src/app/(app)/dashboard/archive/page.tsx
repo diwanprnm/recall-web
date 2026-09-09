@@ -7,6 +7,7 @@ import { Sidebar } from "@/components/layout/sidebar";
 import { Header } from "@/components/layout/header";
 import { ItemCard } from "@/components/items/item-card";
 import { EmptyState } from "@/components/ui/empty-state";
+import { SkeletonList } from "@/components/ui/skeleton-card";
 import { toast } from "@/components/ui/toaster";
 import { deleteItem } from "@/lib/api";
 import { type Item } from "@/types";
@@ -66,11 +67,7 @@ export default function ArchivePage() {
           </div>
 
           {/* Loading */}
-          {loading && (
-            <div className="flex items-center justify-center py-20">
-              <Loader2 className="w-8 h-8 animate-spin text-[#5CC061]" />
-            </div>
-          )}
+          {loading && <SkeletonList rows={6} viewMode={viewMode} />}
 
           {/* Error */}
           {error && (

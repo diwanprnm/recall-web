@@ -8,6 +8,7 @@ import { Header } from "@/components/layout/header";
 import { FilterBar } from "@/components/layout/filter-bar";
 import { ItemCard } from "@/components/items/item-card";
 import { EmptyState } from "@/components/ui/empty-state";
+import { SkeletonList } from "@/components/ui/skeleton-card";
 import { toast } from "@/components/ui/toaster";
 import { ShareToRecallButton } from "@/components/pwa/share-button";
 import { type Item, type Platform } from "@/types";
@@ -314,11 +315,7 @@ function DashboardContent() {
           )}
 
           {/* Loading */}
-          {loading && (
-            <div className="flex items-center justify-center py-20">
-              <Loader2 className="w-8 h-8 animate-spin text-[#5CC061]" />
-            </div>
-          )}
+          {loading && <SkeletonList rows={6} viewMode={viewMode} />}
 
           {/* Error */}
           {error && (
@@ -490,6 +487,7 @@ function AddItemModal({
     { value: "instagram", label: "Instagram" },
     { value: "linkedin", label: "LinkedIn" },
     { value: "tiktok", label: "TikTok" },
+    { value: "facebook", label: "Facebook" },
     { value: "web", label: "Web Article" },
   ];
 
@@ -832,13 +830,7 @@ function EditItemModal({
 
 export default function DashboardPage() {
   return (
-    <Suspense
-      fallback={
-        <div className="min-h-screen flex items-center justify-center">
-          <Loader2 className="w-8 h-8 animate-spin text-[#5CC061]" />
-        </div>
-      }
-    >
+    <Suspense fallback={<SkeletonList rows={6} viewMode="grid" />}>
       <DashboardContent />
     </Suspense>
   );
